@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tom Luca Friedrich</title>
+<meta name="description" content="Hi, I'm Tom.">
+<meta name="theme-color" content="#F1EBDD">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<!-- Papierfaser über allem -->
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ================= Marke ================= -->
+<header class="mark">
+  <a href="#top" class="mark__link" aria-label="Tom Luca Friedrich">
+    <span class="mark__glyph">
+      <svg viewBox="0 0 40 40" aria-hidden="true">
+        <ellipse cx="20" cy="20" rx="17" ry="7" class="mk-orbit"/>
+        <ellipse cx="20" cy="20" rx="7" ry="17" class="mk-orbit mk-orbit--b"/>
+        <circle cx="20" cy="20" r="4.5" class="mk-core"/>
+      </svg>
+    </span>
+    <span class="mark__text">TLF</span>
+  </a>
+</header>
+
+<main>
+
+<!-- ================================================================
+     1. Himmel — Begrüßung
+     ================================================================ -->
+<section class="hero" id="top">
+
+  <div class="sky" aria-hidden="true">
+    <div class="clouds clouds--far">
+      <svg class="cloud cloud--a" viewBox="0 0 210 92"><use href="#cloud"/></svg>
+      <svg class="cloud cloud--b" viewBox="0 0 210 92"><use href="#cloud"/></svg>
+      <svg class="cloud cloud--c" viewBox="0 0 210 92"><use href="#cloud"/></svg>
+    </div>
+    <div class="clouds clouds--near">
+      <svg class="cloud cloud--d" viewBox="0 0 210 92"><use href="#cloud"/></svg>
+      <svg class="cloud cloud--e" viewBox="0 0 210 92"><use href="#cloud"/></svg>
+    </div>
+
+    <div class="gull">
+      <div class="gull__bob">
+        <svg class="gull__svg" viewBox="0 0 60 30">
+          <g class="gull__wing gull__wing--l">
+            <path d="M30 14.8 C24 10.4 15 7.8 3.5 10.4 C14 14 22 16.8 30 18.4 Z"/>
+          </g>
+          <g class="gull__wing gull__wing--r">
+            <path d="M30 14.8 C36 10.4 45 7.8 56.5 10.4 C46 14 38 16.8 30 18.4 Z"/>
+          </g>
+          <path class="gull__body"
+                d="M24.8 15.4 C26.8 13.2 34 13.1 36.9 15 L40.2 14.4 L36.8 16.3 C33.6 18.3 26.8 18.1 24.8 15.4 Z"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <h1 class="hello">
+      <span class="sr-only">Hi, I'm Tom.</span>
+      <!-- Kein Zeilenumbruch zwischen diesen Elementen: der Leerraum würde
+           als Leerzeichen gerendert und eine Lücke vor dem Komma erzeugen. -->
+      <span class="hello__row" aria-hidden="true"><span class="greet" id="greet"><span
+        class="greet__word" id="greetWord"><span class="greet__mark"></span><span
+        class="greet__text" id="greetText">Hi</span><span
+        class="measure" id="measure"></span></span></span><span
+        class="hello__rest">, I'm Tom.</span></span>
+    </h1>
+
+    <div class="portrait" id="portrait">
+      <div class="portrait__disc">
+        <img class="portrait__base" src="assets/img/avatar.jpg" alt="Tom Luca Friedrich"
+             width="340" height="340" fetchpriority="high">
+        <img class="portrait__frame" src="assets/img/sketch-1.png" alt="" width="340" height="340">
+        <img class="portrait__frame" src="assets/img/sketch-2.png" alt="" width="340" height="340">
+        <img class="portrait__frame" src="assets/img/sketch-3.png" alt="" width="340" height="340">
+        <img class="portrait__frame" src="assets/img/sketch-4.png" alt="" width="340" height="340">
+        <img class="portrait__frame" src="assets/img/sketch-5.png" alt="" width="340" height="340">
+      </div>
+    </div>
+  </div>
+
+  <a class="scrollhint" id="scrollhint" href="#garden">
+    <span class="scrollhint__text">scroll</span>
+    <span class="scrollhint__arrow" aria-hidden="true">
+      <svg viewBox="0 0 24 30"><path d="M12 2 V25 M4 17 L12 26 L20 17"/></svg>
+    </span>
+  </a>
+</section>
+
+<!-- ================================================================
+     2. Wiese — Kirschblüten und Kontakt
+     ================================================================ -->
+<section class="garden" id="garden">
+
+  <div class="hills" aria-hidden="true">
+    <svg viewBox="0 0 1200 200" preserveAspectRatio="none">
+      <path class="hill hill--back"
+            d="M0 128C110 74 210 52 300 82C384 110 452 74 548 56C648 38 726 84 848 92C962 100 1064 62 1200 78L1200 200L0 200Z"/>
+      <path class="hill hill--front"
+            d="M0 150C130 118 236 140 342 126C452 112 540 138 660 132C782 126 880 100 1000 112C1090 121 1148 138 1200 132L1200 200L0 200Z"/>
+    </svg>
+  </div>
+
+  <div class="grove" aria-hidden="true">
+    <div class="tree tree--far tree--f1"><svg class="tree__svg" viewBox="0 0 520 620"><use href="#sakuraA"/></svg></div>
+    <div class="tree tree--far tree--f2 tree--flip"><svg class="tree__svg" viewBox="0 0 520 620"><use href="#sakuraB"/></svg></div>
+    <div class="tree tree--near tree--n1"><svg class="tree__svg" viewBox="0 0 520 620"><use href="#sakuraB"/></svg></div>
+    <div class="tree tree--near tree--n2 tree--flip"><svg class="tree__svg" viewBox="0 0 520 620"><use href="#sakuraA"/></svg></div>
+  </div>
+
+  <div class="meadow" aria-hidden="true">
+    <svg viewBox="0 0 1200 240" preserveAspectRatio="none">
+      <path class="grass grass--far"
+            d="M0 62C140 40 250 76 386 60C520 44 640 82 782 64C902 49 1046 78 1200 56L1200 240L0 240Z"/>
+      <path class="grass grass--mid"
+            d="M0 118C128 98 244 128 372 114C506 99 618 130 748 118C876 106 1030 128 1200 108L1200 240L0 240Z"/>
+      <path class="grass grass--near"
+            d="M0 178C150 162 260 186 400 176C540 166 660 190 800 180C930 171 1060 188 1200 172L1200 240L0 240Z"/>
+    </svg>
+  </div>
+
+  <div class="petals" aria-hidden="true">
+    <span class="petal" style="--x:6%;--d:15s;--delay:-2s;--s:1"><i></i></span>
+    <span class="petal" style="--x:14%;--d:19s;--delay:-9s;--s:.7"><i></i></span>
+    <span class="petal" style="--x:22%;--d:13s;--delay:-5s;--s:1.2"><i></i></span>
+    <span class="petal" style="--x:29%;--d:17s;--delay:-13s;--s:.8"><i></i></span>
+    <span class="petal" style="--x:37%;--d:21s;--delay:-3s;--s:1"><i></i></span>
+    <span class="petal" style="--x:44%;--d:14s;--delay:-11s;--s:.65"><i></i></span>
+    <span class="petal" style="--x:52%;--d:18s;--delay:-6s;--s:1.1"><i></i></span>
+    <span class="petal" style="--x:59%;--d:16s;--delay:-15s;--s:.85"><i></i></span>
+    <span class="petal" style="--x:67%;--d:20s;--delay:-1s;--s:1"><i></i></span>
+    <span class="petal" style="--x:74%;--d:13s;--delay:-8s;--s:.75"><i></i></span>
+    <span class="petal" style="--x:82%;--d:18s;--delay:-14s;--s:1.15"><i></i></span>
+    <span class="petal" style="--x:89%;--d:15s;--delay:-4s;--s:.9"><i></i></span>
+    <span class="petal" style="--x:95%;--d:22s;--delay:-10s;--s:.7"><i></i></span>
+    <span class="petal" style="--x:2%;--d:17s;--delay:-16s;--s:.95"><i></i></span>
+  </div>
+
+  <div class="fauna">
+    <button class="critter critter--deer" type="button" aria-label="Deer">
+      <span class="critter__body">
+        <svg viewBox="0 0 120 100" aria-hidden="true">
+          <g class="stroke" stroke-width="4.5">
+            <path d="M45 62 L42 88"/><path d="M54 64 L54 88"/>
+            <path d="M70 64 L72 88"/><path d="M78 61 L81 87"/>
+          </g>
+          <path class="ink" d="M34 48C31 44 27 45 27 49C27 53 31 55 34 53Z"/>
+          <path class="ink" d="M33 54C33 44 44 38 57 38C68 38 78 41 82 48C84 53 82 62 74 65C64 68 48 68 40 64C35 62 33 58 33 54Z"/>
+          <path class="pale" d="M42 62C50 66 64 66 73 63C71 67 62 69 53 68C47 67 44 65 42 62Z"/>
+          <g class="critter__head">
+            <path class="ink" d="M74 50C75 40 79 31 84 25L93 29C90 37 88 46 87 53C83 55 77 55 74 50Z"/>
+            <path class="ink" d="M83 26C87 20 96 18 101 22C104 25 103 30 99 32L88 33C85 32 83 29 83 26Z"/>
+            <path class="ink" d="M84 22C81 16 83 11 87 12C90 13 90 18 89 22Z"/>
+            <g class="stroke" stroke-width="3">
+              <path d="M92 19 L95 8"/><path d="M94 12 L100 8"/><path d="M92 19 L86 9"/><path d="M88 13 L83 10"/>
+            </g>
+            <circle class="eye" cx="92" cy="26" r="2"/>
+          </g>
+        </svg>
+      </span>
+    </button>
+
+    <button class="critter critter--rabbit" type="button" aria-label="Rabbit">
+      <span class="critter__body">
+        <svg viewBox="0 0 120 100" aria-hidden="true">
+          <g class="critter__ears">
+            <path class="ink" d="M74 46C71 36 72 24 77 20C81 18 84 26 84 38C84 43 82 46 79 47Z"/>
+            <path class="ink" d="M82 47C83 37 88 27 93 25C97 24 97 33 93 43C91 47 88 49 85 49Z"/>
+          </g>
+          <path class="ink" d="M37 77C34 62 42 52 56 52C70 52 77 62 77 75C77 82 68 85 56 85C45 85 38 83 37 77Z"/>
+          <path class="pale" d="M42 79C48 83 66 83 73 79C72 84 64 86 56 86C48 86 43 84 42 79Z"/>
+          <path class="ink" d="M66 59C65 50 71 44 79 45C88 46 92 52 91 60C90 68 82 72 75 69C69 67 67 64 66 59Z"/>
+          <circle class="ink" cx="38" cy="69" r="7.5"/>
+          <circle class="eye" cx="82" cy="56" r="2.2"/>
+          <g class="stroke" stroke-width="4"><path d="M49 84 L46 89"/><path d="M67 84 L69 89"/></g>
+        </svg>
+      </span>
+    </button>
+
+    <button class="critter critter--bird" type="button" aria-label="Bird">
+      <span class="critter__body">
+        <svg viewBox="0 0 120 100" aria-hidden="true">
+          <g class="stroke" stroke-width="3"><path d="M56 69 L54 81"/><path d="M66 69 L67 81"/></g>
+          <path class="ink" d="M36 52C30 50 22 47 18 44C21 50 21 56 18 61C24 58 31 56 36 58Z"/>
+          <path class="ink" d="M36 56C34 45 45 36 60 37C73 38 82 45 85 52L93 51L85 57C83 67 71 73 57 71C44 69 37 63 36 56Z"/>
+          <g class="critter__wing">
+            <path class="warm" d="M50 48C58 44 70 47 75 54C68 62 54 61 50 54Z"/>
+          </g>
+          <circle class="eye" cx="77" cy="47" r="2.4"/>
+        </svg>
+      </span>
+    </button>
+
+    <button class="critter critter--butterfly" type="button" aria-label="Butterfly">
+      <span class="critter__body">
+        <svg viewBox="0 0 120 100" aria-hidden="true">
+          <g class="stroke" stroke-width="2.4">
+            <path d="M58 46 C54 35 48 28 42 26"/><path d="M62 46 C66 35 72 28 78 26"/>
+          </g>
+          <g class="wing wing--l">
+            <path class="ink" d="M58 50C48 31 30 25 22 34C15 43 27 55 45 57C51 58 55 55 58 51Z"/>
+            <path class="warm" d="M58 56C48 60 39 68 36 77C33 85 46 87 53 78C57 73 58 64 59 58Z"/>
+            <path class="pale" d="M40 38C46 36 52 39 55 44C49 45 43 43 40 38Z"/>
+          </g>
+          <g class="wing wing--r">
+            <path class="ink" d="M62 50C72 31 90 25 98 34C105 43 93 55 75 57C69 58 65 55 62 51Z"/>
+            <path class="warm" d="M62 56C72 60 81 68 84 77C87 85 74 87 67 78C63 73 62 64 61 58Z"/>
+            <path class="pale" d="M80 38C74 36 68 39 65 44C71 45 77 43 80 38Z"/>
+          </g>
+          <ellipse class="ink" cx="60" cy="56" rx="3.2" ry="15"/>
+        </svg>
+      </span>
+    </button>
+  </div>
+
+  <div class="garden__center">
+    <p class="garden__kicker">Say hello back.</p>
+    <div class="links">
+      <a class="paperbtn" href="mailto:tomlucaf@gmail.com">
+        <span class="paperbtn__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M3 6.5h18v11H3z"/><path d="M3.6 7 12 13.4 20.4 7"/></svg>
+        </span>
+        <span class="paperbtn__label">tomlucaf@gmail.com</span>
+      </a>
+      <a class="paperbtn" href="https://www.linkedin.com/in/tom-luca-f-777a5141b/"
+         target="_blank" rel="noopener noreferrer">
+        <span class="paperbtn__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M4 4.2h16v15.6H4z"/><path d="M7.6 10.4v6M7.6 7.6v.1M11.4 16.4v-6M11.4 12.6c0-1.4 1-2.2 2.2-2.2 1.3 0 2.2.8 2.2 2.4v3.6"/></svg>
+        </span>
+        <span class="paperbtn__label">LinkedIn</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ================================================================
+     Zeichenvorrat: Filter, Wolke, Kirschbäume.
+     Der Block zwischen SAKURA:BEGIN und SAKURA:END wird von
+     tools/make_trees.py erzeugt — von Hand nichts darin ändern.
+     ================================================================ -->
+<svg class="assets" width="0" height="0" aria-hidden="true" focusable="false">
+  <defs>
+    <!-- Unruhige Kante: lässt die Papierformen gerissen statt geschnitten wirken -->
+    <filter id="torn" x="-12%" y="-12%" width="124%" height="124%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.028" numOctaves="4" seed="9" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="7" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="tornSoft" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="3" seed="4" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="4" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+
+    <symbol id="cloud" viewBox="0 0 210 92">
+      <g>
+        <ellipse cx="54" cy="56" rx="36" ry="27"/>
+        <ellipse cx="96" cy="42" rx="42" ry="33"/>
+        <ellipse cx="138" cy="53" rx="33" ry="25"/>
+        <ellipse cx="168" cy="63" rx="24" ry="17"/>
+        <rect x="28" y="54" width="154" height="26" rx="13"/>
+      </g>
+    </symbol>
+
+<!-- SAKURA:BEGIN -->
+    <symbol id="sakuraA" viewBox="0 0 520 620">
+      <g class="tree__wood">
+        <path d="M260 615Q262 549 269 483" stroke-width="27.0"/>
+        <path d="M269 483Q293 440 325 402" stroke-width="17.4"/>
+        <path d="M325 402Q339 377 358 354" stroke-width="15.0"/>
+        <path d="M358 354Q376 341 395 331" stroke-width="10.5"/>
+        <path d="M395 331Q411 330 426 331" stroke-width="7.5"/>
+        <path d="M426 331Q437 333 448 333" stroke-width="4.8"/>
+        <path d="M426 331Q437 327 448 325" stroke-width="5.0"/>
+        <path d="M395 331Q409 323 422 315" stroke-width="6.7"/>
+        <path d="M422 315Q434 317 446 320" stroke-width="4.2"/>
+        <path d="M422 315Q429 306 438 299" stroke-width="4.8"/>
+        <path d="M395 331Q401 316 406 301" stroke-width="6.3"/>
+        <path d="M406 301Q416 297 427 293" stroke-width="4.3"/>
+        <path d="M406 301Q401 289 395 278" stroke-width="4.2"/>
+        <path d="M358 354Q365 333 369 310" stroke-width="10.8"/>
+        <path d="M369 310Q382 301 397 293" stroke-width="6.7"/>
+        <path d="M397 293Q408 290 419 286" stroke-width="4.3"/>
+        <path d="M397 293Q404 282 409 270" stroke-width="4.7"/>
+        <path d="M369 310Q379 296 390 282" stroke-width="7.7"/>
+        <path d="M390 282Q402 278 415 275" stroke-width="5.2"/>
+        <path d="M390 282Q393 269 395 256" stroke-width="5.5"/>
+        <path d="M369 310Q364 296 357 282" stroke-width="7.6"/>
+        <path d="M357 282Q362 272 366 262" stroke-width="4.7"/>
+        <path d="M357 282Q350 274 345 265" stroke-width="4.9"/>
+        <path d="M358 354Q364 334 373 316" stroke-width="9.6"/>
+        <path d="M373 316Q385 307 398 300" stroke-width="6.2"/>
+        <path d="M398 300Q409 301 419 304" stroke-width="3.8"/>
+        <path d="M398 300Q403 291 407 282" stroke-width="3.7"/>
+        <path d="M373 316Q367 303 358 292" stroke-width="6.4"/>
+        <path d="M358 292Q362 282 364 273" stroke-width="4.0"/>
+        <path d="M358 292Q349 289 339 288" stroke-width="4.5"/>
+        <path d="M269 483Q268 432 273 381" stroke-width="18.6"/>
+        <path d="M273 381Q271 350 272 319" stroke-width="16.0"/>
+        <path d="M272 319Q277 298 277 276" stroke-width="10.9"/>
+        <path d="M277 276Q291 267 305 260" stroke-width="6.8"/>
+        <path d="M305 260Q317 262 330 263" stroke-width="4.8"/>
+        <path d="M305 260Q309 249 312 237" stroke-width="4.9"/>
+        <path d="M277 276Q283 260 287 243" stroke-width="7.0"/>
+        <path d="M287 243Q300 240 313 239" stroke-width="4.8"/>
+        <path d="M287 243Q289 230 290 217" stroke-width="4.3"/>
+        <path d="M277 276Q272 260 270 244" stroke-width="6.7"/>
+        <path d="M270 244Q274 232 276 219" stroke-width="4.4"/>
+        <path d="M270 244Q259 239 248 235" stroke-width="4.2"/>
+        <path d="M272 319Q271 298 272 276" stroke-width="11.3"/>
+        <path d="M272 276Q279 261 287 246" stroke-width="7.5"/>
+        <path d="M287 246Q298 242 309 237" stroke-width="4.5"/>
+        <path d="M287 246Q284 233 281 221" stroke-width="4.8"/>
+        <path d="M272 276Q269 260 268 244" stroke-width="7.1"/>
+        <path d="M268 244Q275 234 283 224" stroke-width="5.1"/>
+        <path d="M268 244Q258 238 248 231" stroke-width="4.7"/>
+        <path d="M272 276Q260 264 250 250" stroke-width="8.1"/>
+        <path d="M250 250Q244 240 239 230" stroke-width="5.0"/>
+        <path d="M250 250Q238 248 225 248" stroke-width="5.6"/>
+        <path d="M272 319Q259 299 244 282" stroke-width="9.9"/>
+        <path d="M244 282Q238 265 230 250" stroke-width="7.1"/>
+        <path d="M230 250Q235 239 241 228" stroke-width="4.4"/>
+        <path d="M230 250Q220 242 210 234" stroke-width="4.3"/>
+        <path d="M244 282Q226 275 208 271" stroke-width="6.9"/>
+        <path d="M208 271Q199 259 193 246" stroke-width="4.3"/>
+        <path d="M208 271Q195 275 183 281" stroke-width="4.2"/>
+        <path d="M269 483Q252 441 231 401" stroke-width="16.4"/>
+        <path d="M231 401Q224 374 222 347" stroke-width="14.1"/>
+        <path d="M222 347Q224 328 230 310" stroke-width="9.9"/>
+        <path d="M230 310Q240 299 252 290" stroke-width="6.3"/>
+        <path d="M252 290Q262 289 273 290" stroke-width="3.8"/>
+        <path d="M252 290Q257 280 263 272" stroke-width="4.1"/>
+        <path d="M230 310Q225 298 220 286" stroke-width="6.8"/>
+        <path d="M220 286Q223 278 226 269" stroke-width="4.8"/>
+        <path d="M220 286Q210 284 201 283" stroke-width="4.7"/>
+        <path d="M222 347Q207 332 192 317" stroke-width="9.5"/>
+        <path d="M192 317Q187 302 184 286" stroke-width="6.0"/>
+        <path d="M184 286Q181 274 180 262" stroke-width="3.8"/>
+        <path d="M184 286Q173 281 161 278" stroke-width="3.8"/>
+        <path d="M192 317Q180 306 167 295" stroke-width="6.1"/>
+        <path d="M167 295Q160 285 152 275" stroke-width="3.8"/>
+        <path d="M167 295Q155 292 144 287" stroke-width="3.7"/>
+        <path d="M192 317Q177 314 162 311" stroke-width="6.6"/>
+        <path d="M162 311Q153 304 145 296" stroke-width="4.7"/>
+        <path d="M162 311Q150 314 138 318" stroke-width="4.7"/>
+      </g>
+      <g class="tree__bloom tree__bloom--back">
+        <ellipse cx="301" cy="217" rx="47" ry="41"/>
+        <ellipse cx="435" cy="305" rx="39" ry="37"/>
+        <ellipse cx="189" cy="267" rx="40" ry="38"/>
+        <ellipse cx="436" cy="329" rx="33" ry="26"/>
+        <ellipse cx="271" cy="270" rx="41" ry="31"/>
+        <ellipse cx="281" cy="221" rx="47" ry="41"/>
+        <ellipse cx="410" cy="287" rx="44" ry="41"/>
+        <ellipse cx="200" cy="235" rx="45" ry="43"/>
+        <ellipse cx="146" cy="284" rx="41" ry="37"/>
+        <ellipse cx="269" cy="211" rx="50" ry="40"/>
+        <ellipse cx="383" cy="258" rx="42" ry="36"/>
+        <ellipse cx="309" cy="233" rx="44" ry="36"/>
+        <ellipse cx="287" cy="224" rx="51" ry="40"/>
+        <ellipse cx="303" cy="225" rx="46" ry="43"/>
+        <ellipse cx="417" cy="268" rx="46" ry="37"/>
+        <ellipse cx="339" cy="257" rx="47" ry="38"/>
+        <ellipse cx="369" cy="266" rx="39" ry="36"/>
+        <ellipse cx="187" cy="272" rx="27" ry="21"/>
+        <ellipse cx="279" cy="275" rx="33" ry="28"/>
+        <ellipse cx="370" cy="249" rx="35" ry="28"/>
+        <ellipse cx="291" cy="197" rx="54" ry="44"/>
+        <ellipse cx="400" cy="266" rx="42" ry="38"/>
+        <ellipse cx="429" cy="284" rx="45" ry="38"/>
+        <ellipse cx="330" cy="278" rx="31" ry="29"/>
+        <ellipse cx="434" cy="324" rx="39" ry="31"/>
+      </g>
+      <g class="tree__bloom tree__bloom--mid">
+        <ellipse cx="433" cy="275" rx="21" ry="20"/>
+        <ellipse cx="465" cy="336" rx="24" ry="23"/>
+        <ellipse cx="160" cy="275" rx="26" ry="19"/>
+        <ellipse cx="290" cy="201" rx="31" ry="27"/>
+        <ellipse cx="178" cy="274" rx="26" ry="20"/>
+        <ellipse cx="309" cy="234" rx="25" ry="21"/>
+        <ellipse cx="198" cy="270" rx="17" ry="15"/>
+        <ellipse cx="426" cy="260" rx="25" ry="21"/>
+        <ellipse cx="459" cy="306" rx="20" ry="17"/>
+        <ellipse cx="212" cy="222" rx="28" ry="26"/>
+        <ellipse cx="244" cy="242" rx="27" ry="20"/>
+        <ellipse cx="350" cy="272" rx="23" ry="21"/>
+        <ellipse cx="233" cy="234" rx="30" ry="26"/>
+        <ellipse cx="402" cy="285" rx="28" ry="21"/>
+        <ellipse cx="318" cy="274" rx="28" ry="21"/>
+        <ellipse cx="387" cy="250" rx="28" ry="24"/>
+        <ellipse cx="430" cy="287" rx="21" ry="17"/>
+        <ellipse cx="350" cy="254" rx="23" ry="20"/>
+        <ellipse cx="230" cy="240" rx="24" ry="19"/>
+        <ellipse cx="211" cy="270" rx="21" ry="18"/>
+        <ellipse cx="148" cy="279" rx="28" ry="26"/>
+        <ellipse cx="246" cy="225" rx="31" ry="28"/>
+        <ellipse cx="196" cy="261" rx="26" ry="22"/>
+        <ellipse cx="338" cy="288" rx="19" ry="15"/>
+        <ellipse cx="388" cy="277" rx="26" ry="22"/>
+        <ellipse cx="431" cy="307" rx="26" ry="24"/>
+        <ellipse cx="325" cy="248" rx="25" ry="21"/>
+      </g>
+      <g class="tree__bloom tree__bloom--front">
+        <ellipse cx="376" cy="282" rx="15" ry="12"/>
+        <ellipse cx="219" cy="211" rx="12" ry="10"/>
+        <ellipse cx="353" cy="263" rx="10" ry="8"/>
+        <ellipse cx="336" cy="262" rx="12" ry="10"/>
+        <ellipse cx="421" cy="285" rx="15" ry="12"/>
+        <ellipse cx="294" cy="227" rx="16" ry="14"/>
+        <ellipse cx="221" cy="268" rx="12" ry="11"/>
+        <ellipse cx="288" cy="271" rx="13" ry="12"/>
+        <ellipse cx="351" cy="274" rx="11" ry="8"/>
+        <ellipse cx="441" cy="327" rx="11" ry="10"/>
+        <ellipse cx="407" cy="291" rx="10" ry="9"/>
+        <ellipse cx="321" cy="250" rx="12" ry="9"/>
+        <ellipse cx="332" cy="249" rx="14" ry="10"/>
+        <ellipse cx="446" cy="302" rx="11" ry="9"/>
+        <ellipse cx="193" cy="260" rx="14" ry="13"/>
+        <ellipse cx="399" cy="265" rx="11" ry="8"/>
+        <ellipse cx="257" cy="245" rx="15" ry="11"/>
+        <ellipse cx="128" cy="304" rx="14" ry="10"/>
+      </g>
+    </symbol>
+    <symbol id="sakuraB" viewBox="0 0 520 620">
+      <g class="tree__wood">
+        <path d="M260 615Q263 549 263 483" stroke-width="27.0"/>
+        <path d="M263 483Q280 435 290 385" stroke-width="18.4"/>
+        <path d="M290 385Q306 359 323 334" stroke-width="15.8"/>
+        <path d="M323 334Q339 321 354 307" stroke-width="9.9"/>
+        <path d="M354 307Q368 305 382 302" stroke-width="6.9"/>
+        <path d="M382 302Q392 305 401 310" stroke-width="4.2"/>
+        <path d="M382 302Q391 296 399 288" stroke-width="4.6"/>
+        <path d="M354 307Q368 299 381 291" stroke-width="6.9"/>
+        <path d="M381 291Q392 294 403 298" stroke-width="4.2"/>
+        <path d="M381 291Q390 284 400 278" stroke-width="4.5"/>
+        <path d="M354 307Q361 293 367 278" stroke-width="6.1"/>
+        <path d="M367 278Q378 274 389 269" stroke-width="4.1"/>
+        <path d="M367 278Q364 268 362 258" stroke-width="3.9"/>
+        <path d="M323 334Q332 312 341 290" stroke-width="10.1"/>
+        <path d="M341 290Q356 283 372 278" stroke-width="6.7"/>
+        <path d="M372 278Q384 281 396 283" stroke-width="4.8"/>
+        <path d="M372 278Q383 271 394 264" stroke-width="4.7"/>
+        <path d="M341 290Q350 275 358 258" stroke-width="7.2"/>
+        <path d="M358 258Q370 254 382 248" stroke-width="4.6"/>
+        <path d="M358 258Q363 246 371 233" stroke-width="5.1"/>
+        <path d="M341 290Q344 271 346 252" stroke-width="6.4"/>
+        <path d="M346 252Q358 246 370 239" stroke-width="4.4"/>
+        <path d="M346 252Q340 239 333 226" stroke-width="4.5"/>
+        <path d="M323 334Q331 312 343 291" stroke-width="11.3"/>
+        <path d="M343 291Q354 278 365 266" stroke-width="7.4"/>
+        <path d="M365 266Q376 262 387 258" stroke-width="4.9"/>
+        <path d="M365 266Q371 255 378 244" stroke-width="4.8"/>
+        <path d="M343 291Q351 275 361 260" stroke-width="7.1"/>
+        <path d="M361 260Q374 254 388 249" stroke-width="5.0"/>
+        <path d="M361 260Q358 248 355 236" stroke-width="5.0"/>
+        <path d="M343 291Q336 275 329 260" stroke-width="6.9"/>
+        <path d="M329 260Q335 248 341 237" stroke-width="5.0"/>
+        <path d="M329 260Q319 254 308 249" stroke-width="4.3"/>
+        <path d="M263 483Q270 437 278 391" stroke-width="19.2"/>
+        <path d="M278 391Q280 363 281 334" stroke-width="16.5"/>
+        <path d="M281 334Q291 314 298 293" stroke-width="11.7"/>
+        <path d="M298 293Q312 286 324 276" stroke-width="7.6"/>
+        <path d="M324 276Q335 278 346 277" stroke-width="5.4"/>
+        <path d="M324 276Q331 268 338 259" stroke-width="5.4"/>
+        <path d="M298 293Q306 278 311 262" stroke-width="7.8"/>
+        <path d="M311 262Q321 256 331 249" stroke-width="5.2"/>
+        <path d="M311 262Q315 251 319 239" stroke-width="5.2"/>
+        <path d="M298 293Q300 275 300 257" stroke-width="7.3"/>
+        <path d="M300 257Q310 249 318 239" stroke-width="4.7"/>
+        <path d="M300 257Q294 245 290 231" stroke-width="4.5"/>
+        <path d="M281 334Q281 312 282 290" stroke-width="11.6"/>
+        <path d="M282 290Q294 277 308 266" stroke-width="7.9"/>
+        <path d="M308 266Q322 267 336 269" stroke-width="4.9"/>
+        <path d="M308 266Q313 254 320 242" stroke-width="5.4"/>
+        <path d="M282 290Q287 273 293 257" stroke-width="8.2"/>
+        <path d="M293 257Q304 249 316 242" stroke-width="5.5"/>
+        <path d="M293 257Q286 248 276 241" stroke-width="5.0"/>
+        <path d="M282 290Q272 277 263 263" stroke-width="7.2"/>
+        <path d="M263 263Q257 252 253 240" stroke-width="5.1"/>
+        <path d="M263 263Q251 261 238 259" stroke-width="4.7"/>
+        <path d="M281 334Q272 315 260 296" stroke-width="11.8"/>
+        <path d="M260 296Q256 279 250 263" stroke-width="8.2"/>
+        <path d="M250 263Q257 253 264 243" stroke-width="5.8"/>
+        <path d="M250 263Q240 254 232 245" stroke-width="5.7"/>
+        <path d="M260 296Q248 283 237 270" stroke-width="8.5"/>
+        <path d="M237 270Q233 257 231 245" stroke-width="6.0"/>
+        <path d="M237 270Q225 270 213 270" stroke-width="5.2"/>
+        <path d="M263 483Q255 434 248 385" stroke-width="17.9"/>
+        <path d="M248 385Q244 355 242 326" stroke-width="15.4"/>
+        <path d="M242 326Q242 303 239 281" stroke-width="10.5"/>
+        <path d="M239 281Q249 269 258 255" stroke-width="6.7"/>
+        <path d="M258 255Q269 255 281 257" stroke-width="4.4"/>
+        <path d="M258 255Q264 244 269 233" stroke-width="4.8"/>
+        <path d="M239 281Q232 267 224 254" stroke-width="6.9"/>
+        <path d="M224 254Q226 243 227 231" stroke-width="4.5"/>
+        <path d="M224 254Q213 249 203 243" stroke-width="4.6"/>
+        <path d="M242 326Q228 308 216 289" stroke-width="9.6"/>
+        <path d="M216 289Q209 275 201 261" stroke-width="6.3"/>
+        <path d="M201 261Q200 250 201 239" stroke-width="4.2"/>
+        <path d="M201 261Q190 259 178 258" stroke-width="3.9"/>
+        <path d="M216 289Q203 276 189 265" stroke-width="6.3"/>
+        <path d="M189 265Q183 252 177 240" stroke-width="4.5"/>
+        <path d="M189 265Q176 265 163 267" stroke-width="4.5"/>
+        <path d="M216 289Q199 283 183 278" stroke-width="6.7"/>
+        <path d="M183 278Q175 269 168 259" stroke-width="4.2"/>
+        <path d="M183 278Q170 280 157 279" stroke-width="4.6"/>
+      </g>
+      <g class="tree__bloom tree__bloom--back">
+        <ellipse cx="355" cy="270" rx="39" ry="35"/>
+        <ellipse cx="344" cy="202" rx="60" ry="48"/>
+        <ellipse cx="280" cy="262" rx="41" ry="36"/>
+        <ellipse cx="277" cy="212" rx="43" ry="39"/>
+        <ellipse cx="279" cy="241" rx="49" ry="44"/>
+        <ellipse cx="399" cy="268" rx="40" ry="34"/>
+        <ellipse cx="376" cy="248" rx="41" ry="32"/>
+        <ellipse cx="182" cy="238" rx="37" ry="32"/>
+        <ellipse cx="342" cy="232" rx="42" ry="39"/>
+        <ellipse cx="180" cy="258" rx="45" ry="37"/>
+        <ellipse cx="337" cy="226" rx="45" ry="36"/>
+        <ellipse cx="298" cy="252" rx="47" ry="42"/>
+        <ellipse cx="392" cy="249" rx="38" ry="30"/>
+        <ellipse cx="168" cy="239" rx="53" ry="46"/>
+        <ellipse cx="166" cy="276" rx="48" ry="40"/>
+        <ellipse cx="392" cy="317" rx="31" ry="30"/>
+        <ellipse cx="375" cy="240" rx="41" ry="34"/>
+        <ellipse cx="312" cy="218" rx="44" ry="40"/>
+        <ellipse cx="393" cy="249" rx="50" ry="45"/>
+        <ellipse cx="225" cy="242" rx="43" ry="34"/>
+        <ellipse cx="299" cy="209" rx="45" ry="39"/>
+        <ellipse cx="407" cy="291" rx="32" ry="28"/>
+        <ellipse cx="313" cy="244" rx="39" ry="32"/>
+        <ellipse cx="364" cy="241" rx="49" ry="44"/>
+        <ellipse cx="189" cy="240" rx="40" ry="30"/>
+        <ellipse cx="399" cy="262" rx="37" ry="33"/>
+      </g>
+      <g class="tree__bloom tree__bloom--mid">
+        <ellipse cx="394" cy="254" rx="23" ry="18"/>
+        <ellipse cx="214" cy="283" rx="22" ry="19"/>
+        <ellipse cx="411" cy="278" rx="27" ry="24"/>
+        <ellipse cx="401" cy="302" rx="21" ry="16"/>
+        <ellipse cx="378" cy="267" rx="26" ry="20"/>
+        <ellipse cx="262" cy="248" rx="27" ry="21"/>
+        <ellipse cx="318" cy="254" rx="28" ry="25"/>
+        <ellipse cx="268" cy="242" rx="32" ry="24"/>
+        <ellipse cx="309" cy="228" rx="22" ry="20"/>
+        <ellipse cx="154" cy="265" rx="24" ry="19"/>
+        <ellipse cx="298" cy="238" rx="29" ry="24"/>
+        <ellipse cx="340" cy="268" rx="27" ry="25"/>
+        <ellipse cx="314" cy="227" rx="28" ry="22"/>
+        <ellipse cx="382" cy="278" rx="24" ry="21"/>
+        <ellipse cx="359" cy="234" rx="30" ry="23"/>
+        <ellipse cx="254" cy="245" rx="28" ry="21"/>
+        <ellipse cx="161" cy="252" rx="29" ry="26"/>
+        <ellipse cx="381" cy="227" rx="30" ry="26"/>
+        <ellipse cx="248" cy="241" rx="24" ry="20"/>
+        <ellipse cx="260" cy="238" rx="23" ry="18"/>
+        <ellipse cx="371" cy="242" rx="31" ry="26"/>
+        <ellipse cx="355" cy="244" rx="19" ry="18"/>
+        <ellipse cx="228" cy="241" rx="20" ry="17"/>
+        <ellipse cx="317" cy="236" rx="29" ry="23"/>
+        <ellipse cx="334" cy="286" rx="24" ry="18"/>
+        <ellipse cx="375" cy="248" rx="27" ry="22"/>
+        <ellipse cx="353" cy="248" rx="27" ry="20"/>
+        <ellipse cx="272" cy="219" rx="31" ry="28"/>
+      </g>
+      <g class="tree__bloom tree__bloom--front">
+        <ellipse cx="421" cy="274" rx="11" ry="9"/>
+        <ellipse cx="155" cy="249" rx="14" ry="13"/>
+        <ellipse cx="248" cy="238" rx="14" ry="12"/>
+        <ellipse cx="248" cy="252" rx="12" ry="9"/>
+        <ellipse cx="328" cy="209" rx="15" ry="12"/>
+        <ellipse cx="387" cy="233" rx="16" ry="13"/>
+        <ellipse cx="331" cy="295" rx="15" ry="12"/>
+        <ellipse cx="321" cy="279" rx="13" ry="10"/>
+        <ellipse cx="279" cy="212" rx="11" ry="8"/>
+        <ellipse cx="329" cy="235" rx="16" ry="11"/>
+        <ellipse cx="358" cy="247" rx="12" ry="9"/>
+        <ellipse cx="344" cy="245" rx="15" ry="13"/>
+        <ellipse cx="177" cy="217" rx="15" ry="14"/>
+        <ellipse cx="294" cy="249" rx="14" ry="13"/>
+        <ellipse cx="323" cy="219" rx="14" ry="12"/>
+        <ellipse cx="405" cy="278" rx="14" ry="11"/>
+        <ellipse cx="340" cy="249" rx="13" ry="10"/>
+        <ellipse cx="307" cy="259" rx="14" ry="12"/>
+        <ellipse cx="389" cy="300" rx="13" ry="11"/>
+      </g>
+    </symbol>
+<!-- SAKURA:END -->
+  </defs>
+</svg>
+
+<script src="assets/js/main.js" defer></script>
+</body>
+</html>

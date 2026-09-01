@@ -1,0 +1,575 @@
+/* =========================================================
+   Tom Luca Friedrich — Landingpage
+   Papieroptik: warmer Bogen, Faserkorn, gerissene Kanten
+   ========================================================= */
+
+:root{
+  --paper:      #F1EBDD;   /* Bogen */
+  --paper-deep: #E7DFCD;   /* Schattenseite des Papiers */
+  --cloud:      #FBF8F1;   /* helleres Papier für die Wolken */
+  --cloud-far:  #F6F1E6;
+  --ink:        #26211E;
+  --ink-soft:   #6E6455;
+  --accent:     #D2603A;
+  --marker:     #F3C86A;   /* Textmarker-Gelb */
+
+  /* Wiese und Kirschblüte */
+  --bark:        #4A362B;
+  --bloom-back:  #E0A0B2;
+  --bloom-mid:   #F0BDCA;
+  --bloom-front: #FBDDE5;
+  --hill-back:   #DCDFC6;
+  --hill-front:  #CFD6B4;
+  --grass-far:   #C2CFA3;
+  --grass-mid:   #AFC08E;
+  --grass-near:  #9CAF79;
+  --fur:         #3E342B;
+  --fur-warm:    #7A6350;
+  --fur-pale:    #D9CDB6;
+
+  --font: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  /* Fallbacks für die nicht-lateinischen Begrüßungen */
+  --font-intl: "Space Grotesk", "Segoe UI", "Yu Gothic", "Hiragino Kaku Gothic ProN",
+               "Meiryo", "Microsoft YaHei", "PingFang SC", "Noto Sans", system-ui, sans-serif;
+
+  --ease: cubic-bezier(.22,.61,.36,1);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--font);
+  overflow-x:hidden;            /* die Seite scrollt nur senkrecht */
+}
+
+img{display:block;max-width:100%}
+
+.sr-only{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;
+}
+
+/* =========================================================
+   Papier: Grundton, weiche Wölbung, Faserkorn
+   ========================================================= */
+body::before{
+  /* leichte Wölbung, als läge ein Bogen auf dem Tisch */
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(120% 90% at 50% 0%,   rgba(255,252,244,.75), transparent 62%),
+    radial-gradient(100% 80% at 50% 100%, rgba(150,128,96,.14),  transparent 60%);
+}
+
+.grain{
+  position:fixed;inset:0;pointer-events:none;z-index:60;
+  opacity:.5;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'>\
+<filter id='f'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/>\
+<feColorMatrix type='saturate' values='0'/></filter>\
+<rect width='180' height='180' filter='url(%23f)' opacity='0.42'/></svg>");
+  background-size:180px 180px;
+}
+
+/* =========================================================
+   Himmel
+   ========================================================= */
+/* Der Himmel gehoert jetzt zum Hero-Abschnitt, nicht mehr zum Fenster. */
+.hero{position:relative;overflow:hidden}
+.sky{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.assets{position:absolute;width:0;height:0;overflow:hidden}
+
+.clouds{position:absolute;inset:0}
+.cloud{
+  position:absolute;
+  filter:url(#torn) drop-shadow(3px 6px 5px rgba(120,98,68,.16));
+  will-change:transform;
+}
+.cloud use{fill:var(--cloud)}
+.clouds--far .cloud use{fill:var(--cloud-far)}
+.clouds--far .cloud{filter:url(#torn) drop-shadow(2px 4px 4px rgba(120,98,68,.10));opacity:.85}
+
+/* Größe, Höhe, Tempo — vordere Wolken ziehen schneller (Parallaxe) */
+.cloud--a{width:300px;top:12%;animation:drift 132s linear infinite}
+.cloud--b{width:210px;top:31%;animation:drift 168s linear -54s infinite}
+.cloud--c{width:250px;top:66%;animation:drift 150s linear -96s infinite}
+.cloud--d{width:400px;top:19%;animation:drift  92s linear -30s infinite}
+.cloud--e{width:330px;top:73%;animation:drift 108s linear -70s infinite}
+
+@keyframes drift{
+  from{transform:translateX(-46vw)}
+  to  {transform:translateX(118vw)}
+}
+
+/* ---------- Möwe ---------- */
+.gull{
+  position:absolute;top:26%;left:0;width:58px;
+  /* Negative Verzögerung: die Möwe steht beim Laden schon im Bild,
+     statt erst Sekunden später hereinzufliegen. */
+  animation:fly 46s linear -9s infinite;
+  will-change:transform;
+}
+.gull__bob{animation:bob 5.2s ease-in-out infinite}
+.gull__svg{
+  width:100%;height:auto;overflow:visible;
+  filter:drop-shadow(2px 3px 3px rgba(120,98,68,.18));
+}
+.gull__wing,.gull__body{fill:var(--ink)}
+.gull__wing{transform-box:view-box;transform-origin:30px 15px}
+
+/* Flug: quer über die Seite, dabei sanft steigend und fallend */
+@keyframes fly{
+  from{transform:translate(-14vw, 0) scale(.9)}
+  50% {transform:translate( 52vw, -7vh) scale(1)}
+  to  {transform:translate(116vw, 3vh) scale(.86)}
+}
+@keyframes bob{50%{transform:translateY(-9px)}}
+
+/* Flügelschlag mit Gleitphase: schlagen, gleiten, schlagen */
+/* Positiver Winkel hebt den linken Flügel, negativer den rechten. */
+@keyframes flapL{
+  0%  {transform:rotate(-10deg)}
+  12% {transform:rotate( 19deg)}
+  24% {transform:rotate(-10deg)}
+  36% {transform:rotate( 19deg)}
+  48% {transform:rotate(  1deg)}
+  78% {transform:rotate( -1deg)}   /* Gleiten */
+  90% {transform:rotate( 18deg)}
+  100%{transform:rotate(-10deg)}
+}
+@keyframes flapR{
+  0%  {transform:rotate( 10deg)}
+  12% {transform:rotate(-19deg)}
+  24% {transform:rotate( 10deg)}
+  36% {transform:rotate(-19deg)}
+  48% {transform:rotate( -1deg)}
+  78% {transform:rotate(  1deg)}
+  90% {transform:rotate(-18deg)}
+  100%{transform:rotate( 10deg)}
+}
+.gull__wing--l{animation:flapL 3.1s ease-in-out infinite}
+.gull__wing--r{animation:flapR 3.1s ease-in-out infinite}
+
+/* =========================================================
+   Marke oben links
+   ========================================================= */
+.mark{position:fixed;top:0;left:0;z-index:55;padding:clamp(18px,3vw,34px)}
+.mark__link{
+  display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);
+  font-weight:700;letter-spacing:.06em;font-size:1rem;
+}
+.mark__glyph{width:30px;height:30px}
+.mark__glyph svg{width:100%;height:100%;overflow:visible}
+.mk-orbit{fill:none;stroke:var(--ink);stroke-width:2.4;transform-origin:20px 20px;animation:rot 9s linear infinite}
+.mk-orbit--b{animation-duration:6s;animation-direction:reverse;stroke:var(--accent)}
+.mk-core{fill:var(--accent);stroke:var(--ink);stroke-width:2.4}
+@keyframes rot{to{transform:rotate(360deg)}}
+
+/* =========================================================
+   Bühne
+   ========================================================= */
+.stage{
+  position:relative;z-index:4;
+  min-height:100svh;
+  display:flex;align-items:center;justify-content:center;
+  gap:clamp(22px,4.5vw,60px);
+  padding:clamp(20px,5vw,60px);
+}
+
+.hello{
+  margin:0;
+  font-size:clamp(2.3rem,6.8vw,5.4rem);
+  font-weight:700;letter-spacing:-.025em;line-height:1.05;
+  white-space:nowrap;
+}
+.hello__row{display:inline-flex;align-items:baseline}
+
+/* --- Der rotierende Gruß --- */
+/* Das Wort läuft im normalen Fluss mit: nur so trifft seine Grundlinie
+   exakt die von ", I'm Tom.". Die Breite steuert JS, damit der Rest der
+   Zeile beim Sprachwechsel weich mitwandert. */
+.greet{
+  display:inline-block;vertical-align:baseline;
+  width:1.55em;                 /* Rückfallbreite, falls JS nicht läuft */
+  white-space:nowrap;
+  will-change:width;
+}
+/* Erst nach der ersten Messung animieren, sonst wandert die Zeile beim
+   Laden einmal sichtbar von der Rückfallbreite auf die echte Breite. */
+.greet.is-ready{transition:width .30s var(--ease)}
+.greet__word{
+  position:relative;display:inline-block;z-index:0;
+  font-family:var(--font-intl);
+  /* Feste Zeilenhöhe: sonst bestimmt die jeweilige Ersatzschrift die Höhe
+     der Wortbox — und der Textmarker säße bei jeder Sprache woanders. */
+  line-height:1;
+  unicode-bidi:isolate;
+  white-space:nowrap;
+}
+.greet__text{position:relative}
+
+/* Sprachwechsel: hinaus nach oben, herein von unten.
+   Die 300 ms müssen zur Konstante OUT in main.js passen. */
+.greet__word{transition:transform .3s var(--ease), opacity .3s var(--ease)}
+.greet__word.is-out{transform:translateY(-.42em) rotate(-2.5deg);opacity:0}
+.greet__word.is-in{transform:translateY(.5em) rotate(2.5deg);opacity:0;transition:none}
+
+/* Textmarker-Strich hinter dem Wort */
+.greet__mark{
+  position:absolute;z-index:-1;
+  left:-.10em;right:-.10em;bottom:.20em;height:.46em;
+  background:var(--marker);
+  opacity:.62;
+  border-radius:.24em .3em .2em .26em / .5em .4em .55em .45em;
+  transform:rotate(-1.1deg);
+  filter:url(#torn);
+  pointer-events:none;
+}
+
+/* Sitzt im Wort selbst und erbt dadurch Schriftart, -größe, -schnitt und
+   Laufweite exakt — Nachbauen der Stile wäre fehleranfällig. */
+.measure{
+  position:absolute;visibility:hidden;pointer-events:none;
+  top:0;left:0;white-space:nowrap;
+}
+
+/* =========================================================
+   Portrait mit Skizzen-Daumenkino
+   ========================================================= */
+.portrait{flex:none}
+.portrait__disc{
+  position:relative;
+  width:clamp(96px,15vw,150px);aspect-ratio:1;
+  border-radius:50%;
+  background:var(--cloud);
+  box-shadow:
+    0 0 0 3px var(--paper),
+    0 0 0 5px var(--ink),
+    4px 7px 10px rgba(120,98,68,.22);
+  overflow:hidden;
+  transition:transform .45s var(--ease);
+}
+.portrait:hover .portrait__disc,
+.portrait:focus-within .portrait__disc{transform:translateY(-4px) rotate(-2deg)}
+
+.portrait__disc img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+}
+.portrait__frame{opacity:0}
+/* Der aktive Skizzen-Frame wird per JS gesetzt */
+.portrait__frame.is-on{opacity:1}
+.portrait.is-sketching .portrait__base{opacity:0}
+
+/* =========================================================
+   Hinweis zum Weiterscrollen
+   ========================================================= */
+.scrollhint{
+  position:absolute;left:50%;bottom:clamp(16px,4vh,38px);z-index:9;
+  transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:9px;
+  text-decoration:none;color:var(--ink-soft);
+  font-size:.7rem;font-weight:500;letter-spacing:.26em;text-transform:uppercase;
+  transition:opacity .5s var(--ease), transform .5s var(--ease);
+}
+.scrollhint__arrow{width:19px;height:25px;animation:hintBob 2.2s ease-in-out infinite}
+.scrollhint__arrow svg{
+  width:100%;height:100%;fill:none;stroke:currentColor;
+  stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;
+}
+@keyframes hintBob{
+  0%,100%{transform:translateY(0);opacity:.5}
+  50%    {transform:translateY(7px);opacity:1}
+}
+/* Sobald gescrollt wird, hat der Hinweis seinen Zweck erfüllt */
+.scrollhint.is-gone{opacity:0;transform:translate(-50%,14px);pointer-events:none}
+
+/* =========================================================
+   Wiese
+   ========================================================= */
+.garden{
+  position:relative;
+  min-height:100svh;
+  overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  padding:20svh clamp(18px,5vw,60px) 34svh;
+  background:linear-gradient(180deg, #F8EFE9 0%, var(--paper) 46%);
+}
+
+/* ---------- Hügel im Hintergrund ---------- */
+.hills{position:absolute;left:0;right:0;bottom:20%;height:26%;z-index:1}
+.hills svg{width:100%;height:100%;display:block;filter:url(#tornSoft)}
+.hill--back{fill:var(--hill-back)}
+.hill--front{fill:var(--hill-front)}
+
+/* ---------- Bäume ---------- */
+/* Kein eigener z-index: der wuerde einen Stapelkontext aufmachen und alle
+   Bäume auf dessen Ebene sperren — die vorderen kämen hinter die Wiese. */
+.grove{position:absolute;inset:0}
+.tree{position:absolute}
+.tree__svg{
+  width:100%;height:auto;display:block;
+  transform-origin:50% 100%;              /* Wiegen um den Stammfuß */
+}
+.tree__wood path{fill:none;stroke:var(--bark);stroke-linecap:round}
+/* Der Filter sitzt nur auf den ruhenden Blütengruppen. Läge er auf dem
+   bewegten Baum, müsste der Browser ihn in jedem Bild neu rastern. */
+.tree__bloom{filter:url(#tornSoft)}
+.tree__bloom--back  ellipse{fill:var(--bloom-back)}
+.tree__bloom--mid   ellipse{fill:var(--bloom-mid)}
+.tree__bloom--front ellipse{fill:var(--bloom-front)}
+
+.tree--near{z-index:4;width:clamp(240px,36vw,540px);bottom:13%}
+.tree--far {z-index:2;width:clamp(120px,18vw,270px);bottom:25%;opacity:.85}
+/* Auflagerschatten: ohne ihn schwebt der Stamm über dem Gras. */
+.tree::after{
+  content:"";position:absolute;left:50%;bottom:0;transform:translateX(-50%);
+  width:44%;height:26px;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 50%, rgba(88,104,66,.34), transparent 70%);
+}
+.tree--far::after{width:36%;height:16px;opacity:.6}
+/* Ferne Bäume blasser — die Farben erben in die <use>-Kopien hinein */
+.tree--far{
+  --bark:        #6B584A;
+  --bloom-back:  #EFC4CE;
+  --bloom-mid:   #F6D7DF;
+  --bloom-front: #FCEAEF;
+}
+.tree--n1{left:-5%}
+.tree--n2{right:-5%}
+.tree--f1{left:19%}
+.tree--f2{right:21%}
+
+/* Jeder Baum wiegt sich in eigenem Takt; gespiegelte mit eigenem Keyframe,
+   weil die Spiegelung sonst von der Drehung überschrieben würde. */
+@keyframes sway     {0%,100%{transform:rotate(-1.1deg)}50%{transform:rotate(1.4deg)}}
+@keyframes swayFlip {0%,100%{transform:scaleX(-1) rotate(-1.1deg)}50%{transform:scaleX(-1) rotate(1.4deg)}}
+.tree__svg{animation:sway 7.5s ease-in-out infinite}
+.tree--flip .tree__svg{animation-name:swayFlip}
+.tree--n1 .tree__svg{animation-duration:7.5s;animation-delay:-1.2s}
+.tree--n2 .tree__svg{animation-duration:8.9s;animation-delay:-3.6s}
+.tree--f1 .tree__svg{animation-duration:6.4s;animation-delay:-2.1s}
+.tree--f2 .tree__svg{animation-duration:9.7s;animation-delay:-5.0s}
+
+/* ---------- Grasbänder ---------- */
+.meadow{position:absolute;left:0;right:0;bottom:0;height:32%;z-index:3}
+.meadow svg{width:100%;height:100%;display:block;filter:url(#tornSoft)}
+.grass--far {fill:var(--grass-far)}
+.grass--mid {fill:var(--grass-mid)}
+.grass--near{fill:var(--grass-near)}
+
+/* ---------- Blütenblätter ---------- */
+.petals{position:absolute;inset:0;z-index:7;pointer-events:none;overflow:hidden}
+.petal{position:absolute;left:var(--x);top:0;animation:petalFall var(--d) linear var(--delay) infinite}
+.petal i{
+  display:block;
+  width:calc(9px * var(--s));height:calc(12px * var(--s));
+  background:var(--bloom-mid);
+  border-radius:100% 0 100% 0;
+  animation:petalSway calc(var(--d) / 4) ease-in-out var(--delay) infinite;
+}
+/* Fallen und Taumeln getrennt: sonst dreht sich die Seitwärtsbewegung mit */
+@keyframes petalFall{from{transform:translateY(-10vh)} to{transform:translateY(106svh)}}
+@keyframes petalSway{
+  0%,100%{transform:translateX(-15px) rotate(-25deg)}
+  50%    {transform:translateX(17px)  rotate(215deg)}
+}
+
+/* =========================================================
+   Tiere
+   ========================================================= */
+.fauna{position:absolute;inset:0;z-index:6}
+.critter{
+  position:absolute;padding:0;border:0;background:none;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  line-height:0;
+}
+.critter__body{display:block;transform-origin:50% 92%}
+.critter svg{width:100%;height:auto;display:block;filter:drop-shadow(2px 4px 3px rgba(120,98,68,.20))}
+.critter .ink{fill:var(--fur)}
+.critter .warm{fill:var(--fur-warm)}
+.critter .pale{fill:var(--fur-pale)}
+.critter .eye{fill:var(--paper)}
+.critter .stroke{fill:none;stroke:var(--fur);stroke-linecap:round;stroke-linejoin:round}
+.critter:focus-visible{outline:3px solid var(--accent);outline-offset:6px;border-radius:8px}
+
+.critter--deer     {left:11%; bottom:14%; width:clamp(76px,8.6vw,128px)}
+.critter--rabbit   {right:16%;bottom:7%;  width:clamp(50px,5.4vw,82px)}
+.critter--bird     {left:34%; bottom:5%;  width:clamp(42px,4.6vw,66px)}
+.critter--butterfly{left:17%; bottom:52%; width:clamp(36px,3.8vw,54px)}
+
+/* --- Ruhezustand: kleine Lebenszeichen --- */
+.critter__head,.critter__ears,.critter__wing,.critter--butterfly .wing{
+  transform-box:view-box;
+}
+.critter--deer .critter__head{transform-origin:78px 50px;animation:headBob 6.5s ease-in-out infinite}
+@keyframes headBob{0%,58%,100%{transform:rotate(0)}68%{transform:rotate(7deg)}78%{transform:rotate(1deg)}}
+
+.critter--rabbit .critter__ears{transform-origin:78px 48px;animation:earTwitch 5.2s ease-in-out infinite}
+@keyframes earTwitch{0%,72%,100%{transform:rotate(0)}80%{transform:rotate(-9deg)}88%{transform:rotate(3deg)}}
+
+.critter--bird .critter__body{animation:birdBob 3.4s ease-in-out infinite}
+@keyframes birdBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+
+.critter--butterfly .critter__body{animation:flutterDrift 9s ease-in-out infinite}
+@keyframes flutterDrift{
+  0%,100%{transform:translate(0,0)}
+  33%    {transform:translate(-10px,-14px)}
+  66%    {transform:translate(8px,-6px)}
+}
+.critter--butterfly .wing{transform-origin:60px 56px;animation:wingBeat .42s ease-in-out infinite}
+@keyframes wingBeat{50%{transform:scaleX(.5)}}
+
+/* --- Beim Anklicken --- */
+.critter.is-playing .critter__body{animation:none}
+
+/* Reh: ducken, weiter Satz nach rechts, zurückspringen */
+.critter--deer.is-playing .critter__body{animation:leap 1.7s cubic-bezier(.4,0,.5,1)}
+@keyframes leap{
+  0%  {transform:translate(0,0) rotate(0) scale(1,1)}
+  12% {transform:translate(2%,4%) scale(1.07,.9)}
+  30% {transform:translate(34%,-46%) rotate(-9deg) scale(.96,1.08)}
+  48% {transform:translate(72%,0) rotate(2deg) scale(1.06,.92)}
+  56% {transform:translate(72%,0) rotate(0) scale(1,1)}
+  74% {transform:translate(36%,-38%) rotate(8deg) scale(.97,1.06)}
+  92% {transform:translate(0,2%) scale(1.06,.92)}
+  100%{transform:translate(0,0) scale(1,1)}
+}
+
+/* Hase: zwei kurze Hopser hin und zurück */
+.critter--rabbit.is-playing .critter__body{animation:hop 1.3s cubic-bezier(.35,0,.5,1)}
+@keyframes hop{
+  0%  {transform:translate(0,0) scale(1,1)}
+  10% {transform:translate(0,3%) scale(1.08,.88)}
+  30% {transform:translate(-34%,-34%) scale(.95,1.09)}
+  46% {transform:translate(-62%,0) scale(1.07,.9)}
+  54% {transform:translate(-62%,0) scale(1,1)}
+  74% {transform:translate(-30%,-30%) scale(.96,1.08)}
+  92% {transform:translate(0,3%) scale(1.07,.9)}
+  100%{transform:translate(0,0) scale(1,1)}
+}
+
+/* Vogel: Schleife nach oben und zurück auf den Platz */
+.critter--bird.is-playing .critter__body{animation:flit 1.6s ease-in-out}
+@keyframes flit{
+  0%  {transform:translate(0,0) rotate(0)}
+  18% {transform:translate(34%,-130%) rotate(-16deg)}
+  38% {transform:translate(130%,-205%) rotate(-4deg)}
+  58% {transform:translate(210%,-135%) rotate(14deg)}
+  78% {transform:translate(135%,-34%) rotate(8deg)}
+  100%{transform:translate(0,0) rotate(0)}
+}
+.critter--bird.is-playing .critter__wing{
+  transform-origin:62px 52px;animation:birdFlap .17s ease-in-out infinite;
+}
+@keyframes birdFlap{50%{transform:rotate(-34deg) scaleY(.6)}}
+
+/* Falter: eine Acht um den Ausgangspunkt */
+.critter--butterfly.is-playing .critter__body{animation:aboutEight 2.4s ease-in-out}
+@keyframes aboutEight{
+  0%  {transform:translate(0,0) rotate(0)}
+  20% {transform:translate(-74%,-56%) rotate(-12deg)}
+  40% {transform:translate(-136%,16%) rotate(8deg)}
+  60% {transform:translate(-70%,74%) rotate(14deg)}
+  80% {transform:translate(24%,26%) rotate(-6deg)}
+  100%{transform:translate(0,0) rotate(0)}
+}
+.critter--butterfly.is-playing .wing{animation-duration:.22s}
+
+/* =========================================================
+   Kontakt in der Mitte
+   ========================================================= */
+.garden__center{position:relative;z-index:8;text-align:center}
+.garden__kicker{
+  margin:0 0 clamp(16px,2.6vw,28px);
+  font-weight:700;letter-spacing:-.02em;
+  font-size:clamp(1.35rem,3.6vw,2.5rem);
+}
+.links{display:flex;flex-wrap:wrap;gap:clamp(10px,1.6vw,18px);justify-content:center}
+
+.paperbtn{
+  position:relative;isolation:isolate;
+  display:inline-flex;align-items:center;gap:11px;
+  padding:14px clamp(18px,2vw,26px);
+  text-decoration:none;color:var(--ink);
+  font-weight:500;font-size:clamp(.88rem,1.05vw,1rem);
+  transition:transform .25s var(--ease);
+}
+/* Fläche und Schatten liegen in Pseudoelementen, damit der gerissene
+   Filter die Schrift nicht mitverzerrt. */
+.paperbtn::before,.paperbtn::after{
+  content:"";position:absolute;inset:0;
+  border-radius:15px 12px 16px 11px / 12px 16px 11px 15px;
+}
+.paperbtn::before{
+  z-index:-1;background:var(--cloud);border:2.5px solid var(--ink);
+  filter:url(#tornSoft);transition:background .25s var(--ease);
+}
+.paperbtn::after{
+  z-index:-2;background:rgba(120,98,68,.30);
+  transform:translate(4px,6px);filter:url(#tornSoft) blur(2px);
+  transition:transform .25s var(--ease);
+}
+.paperbtn:hover{transform:translate(-2px,-3px)}
+.paperbtn:hover::before{background:var(--marker)}
+.paperbtn:hover::after{transform:translate(7px,10px)}
+.paperbtn:active{transform:translate(1px,2px)}
+.paperbtn:active::after{transform:translate(2px,3px)}
+.paperbtn:focus-visible{outline:3px solid var(--accent);outline-offset:5px}
+
+.paperbtn__icon{width:20px;height:20px;flex:none}
+.paperbtn__icon svg{
+  width:100%;height:100%;fill:none;stroke:var(--ink);
+  stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;
+}
+
+/* =========================================================
+   Kleinere Bildschirme
+   ========================================================= */
+@media (max-width:680px){
+  .stage{flex-direction:column-reverse;gap:26px;justify-content:center}
+  .hello{font-size:clamp(1.6rem,8.2vw,2.6rem)}
+  .gull{top:18%}
+  .cloud--d{width:290px}
+  .cloud--a{width:220px}
+
+  .garden{padding:10svh 20px 34svh}
+  .tree--near{width:clamp(190px,54vw,270px);bottom:15%}
+  .tree--n1{left:-18%}
+  .tree--n2{right:-18%}
+  .tree--far{width:clamp(92px,26vw,150px);bottom:26%}
+  .tree--f1{left:8%}
+  .tree--f2{right:10%}
+  .links{flex-direction:column;align-items:stretch}
+  .paperbtn{justify-content:center}
+  .critter--deer{left:6%;bottom:15%}
+  .critter--bird{left:30%}
+  .critter--rabbit{right:10%}
+  /* left, nicht right: die Grundregel setzt left — bei gesetzter Breite
+     gewinnt left, die Regel bliebe sonst wirkungslos. */
+  .critter--butterfly{left:8%;bottom:54%}
+}
+
+/* =========================================================
+   Bewegung reduzieren
+   ========================================================= */
+@media (prefers-reduced-motion:reduce){
+  .cloud,.gull,.gull__bob,.gull__wing,.mk-orbit{animation:none}
+  /* Alles, was von selbst läuft, steht still. Die Tier-Animationen beim
+     Anklicken bleiben — die löst die Besucherin ja selbst aus. */
+  .tree__svg,.petal,.petal i,.scrollhint__arrow,
+  .critter--deer .critter__head,.critter--rabbit .critter__ears,
+  .critter--bird .critter__body,.critter--butterfly .critter__body,
+  .critter--butterfly .wing{animation:none}
+  .paperbtn{transition:none}
+  .gull{transform:translate(52vw,-4vh)}
+  .cloud--a{transform:translateX(6vw)}
+  .cloud--b{transform:translateX(58vw)}
+  .cloud--c{transform:translateX(30vw)}
+  .cloud--d{transform:translateX(72vw)}
+  .cloud--e{transform:translateX(14vw)}
+  .greet,.greet__word,.portrait__disc{transition:none}
+}
