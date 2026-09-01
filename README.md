@@ -30,7 +30,7 @@ git push -u origin main
 ```
 index.html                 Beide Abschnitte; unten der erzeugte Baum-Block
 assets/css/style.css       Papieroptik, Wolken, Möwe, Wiese, Tiere, Layout
-assets/js/main.js          Sprachrotation, Skizzen-Daumenkino, Tiere, Scrollhinweis
+assets/js/main.js          Sprachrotation, Daumenkino, Tiere, Scrollen, Tag/Nacht
 assets/img/avatar.jpg      Portrait im Normalzustand
 assets/img/sketch-1..5.png Handgezeichnete Frames für den Hover-Effekt
 assets/img/portrait.jpg    Quelle für den Generator (wird nicht angezeigt)
@@ -55,6 +55,13 @@ tools/make_trees.py        Erzeugt die Kirschbäume und setzt sie in index.html 
 | `--bark`       | Stämme und Äste                    |
 | `--grass-*`    | die drei Wiesenbänder              |
 | `--fur*`       | Fell der Tiere                     |
+| `--btn-*`      | Kontaktknöpfe                      |
+| `--sun`, `--moon-face` | Sonne und Mond im Umschalter |
+| `--star*`      | Sterne am Nachthimmel              |
+
+Die Nachtfassung steht gesammelt im Block `[data-theme="dark"]` weiter unten im
+Stylesheet: dort werden dieselben Variablen mit Nachtwerten überschrieben. Für
+eine neue Farbe also **beide** Stellen anfassen.
 
 **Begrüßungen** — die Liste `GREETINGS` oben in `assets/js/main.js`. Jeder Eintrag
 braucht `text` und `lang`; bei rechtsläufigen Schriften zusätzlich `dir: "rtl"`.
@@ -107,10 +114,36 @@ JavaScript liest sie aus dem CSS aus, du musst also nichts nachziehen.
 seine Werte als CSS-Variablen: `--x` Startspalte, `--d` Falldauer, `--delay`
 Versatz, `--s` Größe. Mehr oder weniger Blätter: Zeilen ergänzen oder löschen.
 
+## Tag und Nacht
+
+Der Umschalter sitzt oben rechts (`.daynight`). Die Wahl landet in
+`localStorage` unter `tlf-theme`; ohne gespeicherte Wahl entscheidet die
+Systemeinstellung des Besuchers.
+
+Gesetzt wird das Thema von einem **kleinen Skript im `<head>`** von
+`index.html`, nicht von `main.js`. Das ist Absicht: `main.js` lädt mit `defer`
+und liefe erst nach dem ersten Malen — die helle Fassung würde kurz aufblitzen.
+
+Sonne und Mond sind dasselbe SVG. Der Mond entsteht, indem ein Kreis in einer
+Maske über die Scheibe fährt und die Sichel ausschneidet; die Strahlen schrumpfen
+gleichzeitig weg. Alles in `.dn-*` im Stylesheet.
+
+Die Sterne (`.stars`) liegen fest hinter beiden Abschnitten und sind im hellen
+Modus auf `opacity:0`. Mehr oder weniger Sterne: die `<i>`-Zeilen in `index.html`
+ergänzen oder löschen — jede trägt Position, Größe, Dauer und Versatz als
+CSS-Variablen.
+
+**Wolkenabflug** — beim Herunterscrollen bekommt `.sky` die Klasse `is-leaving`,
+die beiden Wolkenschichten ziehen dann aus dem Bild. Die Bewegung liegt auf den
+Schichten, nicht auf den Wolken selbst: die tragen bereits ihre endlose
+`drift`-Animation, und ein `transform` auf demselben Element würde von ihr
+überschrieben.
+
 ## Barrierefreiheit
 
-Respektiert `prefers-reduced-motion`: Wolken, Möwe, Bäume, Blütenblätter und
-Sprachrotation stehen dann still. Die Tier-Animationen bleiben — die löst man
+Respektiert `prefers-reduced-motion`: Wolken, Möwe, Bäume, Blütenblätter, Sterne
+und Sprachrotation stehen dann still; die Wolken verabschieden sich nur durch
+Ausblenden statt durch den weiten Weg aus dem Bild. Die Tier-Animationen bleiben — die löst man
 selbst per Klick aus. Die Überschrift steht zusätzlich als vollständiger Satz für Screenreader im
 Markup, damit der rotierende Gruß nicht ständig vorgelesen wird. Auf Touchgeräten
 zeigt ein Tippen auf das Portrait die Skizzen.

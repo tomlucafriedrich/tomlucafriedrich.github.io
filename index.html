@@ -11,11 +11,103 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&amp;display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
+<script>
+/* Läuft absichtlich hier oben und nicht in main.js: erst danach wird gemalt,
+   sonst blitzt beim Laden kurz die helle Fassung auf. */
+(function(){try{
+  var t=localStorage.getItem("tlf-theme");
+  if(t!=="dark"&&t!=="light")
+    t=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";
+  document.documentElement.setAttribute("data-theme",t);
+}catch(e){document.documentElement.setAttribute("data-theme","light");}})();
+</script>
 </head>
 <body>
 
 <!-- Papierfaser über allem -->
 <div class="grain" aria-hidden="true"></div>
+
+<!-- Nachthimmel: liegt fest hinter beiden Abschnitten, nur im Dark Mode sichtbar -->
+<div class="stars" aria-hidden="true">
+  <div class="moon">
+    <svg viewBox="0 0 120 120">
+      <defs>
+        <mask id="moonCut">
+          <rect width="120" height="120" fill="#fff"/>
+          <circle cx="82" cy="40" r="40" fill="#000"/>
+        </mask>
+      </defs>
+      <circle class="moon__disc" cx="58" cy="60" r="40" mask="url(#moonCut)"/>
+    </svg>
+  </div>
+  <div class="stars__field">
+    <i style="--x:45.3%;--y:47.6%;--s:1.0;--d:4.3s;--dl:-0.9s"></i>
+    <i style="--x:19.6%;--y:68.3%;--s:1.0;--d:5.0s;--dl:-1.2s"></i>
+    <i style="--x:10.2%;--y:26.0%;--s:0.6;--d:4.6s;--dl:-0.7s"></i>
+    <i style="--x:63.2%;--y:50.6%;--s:1.0;--d:6.3s;--dl:-2.1s"></i>
+    <i style="--x:61.3%;--y:13.8%;--s:0.6;--d:5.8s;--dl:-5.6s"></i>
+    <i style="--x:4.5%;--y:74.8%;--s:1.15;--d:2.7s;--dl:-3.2s"></i>
+    <i style="--x:44.2%;--y:71.6%;--s:1.15;--d:3.5s;--dl:-4.2s"></i>
+    <i style="--x:1.5%;--y:7.9%;--s:1.4;--d:3.7s;--dl:-0.0s"></i>
+    <i style="--x:98.6%;--y:71.4%;--s:1.4;--d:3.6s;--dl:-1.5s"></i>
+    <i style="--x:51.3%;--y:3.4%;--s:1.15;--d:5.5s;--dl:-3.6s"></i>
+    <i style="--x:84.0%;--y:32.9%;--s:0.6;--d:5.8s;--dl:-6.0s"></i>
+    <i style="--x:21.6%;--y:77.4%;--s:1.0;--d:4.0s;--dl:-1.7s"></i>
+    <i style="--x:42.1%;--y:48.1%;--s:0.75;--d:5.6s;--dl:-4.4s"></i>
+    <i style="--x:9.5%;--y:28.4%;--s:1.0;--d:5.5s;--dl:-5.3s"></i>
+    <i style="--x:25.1%;--y:9.2%;--s:0.6;--d:4.4s;--dl:-3.1s"></i>
+    <i style="--x:67.8%;--y:16.4%;--s:1.15;--d:3.3s;--dl:-1.6s"></i>
+    <i style="--x:13.8%;--y:54.7%;--s:0.6;--d:4.1s;--dl:-0.1s"></i>
+    <i style="--x:1.0%;--y:73.5%;--s:1.15;--d:3.8s;--dl:-0.7s"></i>
+    <i style="--x:21.6%;--y:33.6%;--s:1.15;--d:5.0s;--dl:-5.4s"></i>
+    <i style="--x:98.0%;--y:18.4%;--s:0.9;--d:2.6s;--dl:-2.3s"></i>
+    <i style="--x:82.4%;--y:32.9%;--s:0.6;--d:2.9s;--dl:-2.5s"></i>
+    <i style="--x:24.8%;--y:51.1%;--s:0.9;--d:5.0s;--dl:-5.2s"></i>
+    <i style="--x:58.6%;--y:70.8%;--s:0.75;--d:5.9s;--dl:-4.9s"></i>
+    <i style="--x:16.1%;--y:77.3%;--s:1.15;--d:3.5s;--dl:-4.9s"></i>
+    <i style="--x:73.5%;--y:80.0%;--s:0.75;--d:5.2s;--dl:-3.7s"></i>
+    <i style="--x:48.3%;--y:7.3%;--s:0.6;--d:3.0s;--dl:-5.8s"></i>
+    <i style="--x:95.3%;--y:20.5%;--s:1.4;--d:4.1s;--dl:-3.5s"></i>
+    <i style="--x:89.7%;--y:41.8%;--s:1.15;--d:3.3s;--dl:-1.7s"></i>
+    <i style="--x:7.7%;--y:19.7%;--s:1.15;--d:5.1s;--dl:-2.3s"></i>
+    <i style="--x:8.3%;--y:18.4%;--s:0.75;--d:5.4s;--dl:-5.6s"></i>
+    <i style="--x:41.3%;--y:21.4%;--s:0.6;--d:3.3s;--dl:-3.8s"></i>
+    <i style="--x:57.1%;--y:11.7%;--s:0.9;--d:3.1s;--dl:-3.3s"></i>
+    <i style="--x:33.4%;--y:62.3%;--s:1.15;--d:4.8s;--dl:-5.2s"></i>
+    <i style="--x:4.4%;--y:2.4%;--s:0.9;--d:5.3s;--dl:-0.2s"></i>
+    <i style="--x:3.1%;--y:54.1%;--s:1.0;--d:2.9s;--dl:-4.1s"></i>
+    <i style="--x:14.4%;--y:6.8%;--s:1.0;--d:4.7s;--dl:-1.6s"></i>
+    <i style="--x:89.2%;--y:62.6%;--s:1.4;--d:3.1s;--dl:-0.2s"></i>
+    <i style="--x:34.5%;--y:7.9%;--s:1.0;--d:6.0s;--dl:-0.8s"></i>
+  </div>
+</div>
+
+<!-- ================= Tag / Nacht ================= -->
+<button class="daynight" id="daynight" type="button"
+        aria-label="Nachtansicht einschalten" aria-pressed="false">
+  <span class="daynight__face" aria-hidden="true">
+    <svg viewBox="0 0 44 44">
+      <defs>
+        <mask id="dnCut">
+          <rect width="44" height="44" fill="#fff"/>
+          <circle class="dn-bite" cx="22" cy="22" r="9.5" fill="#000"/>
+        </mask>
+      </defs>
+      <g class="dn-rays">
+        <path d="M22 4v4.6"/><path d="M22 35.4v4.6"/>
+        <path d="M4 22h4.6"/><path d="M35.4 22h4.6"/>
+        <path d="M9.3 9.3l3.3 3.3"/><path d="M31.4 31.4l3.3 3.3"/>
+        <path d="M34.7 9.3l-3.3 3.3"/><path d="M12.6 31.4l-3.3 3.3"/>
+      </g>
+      <circle class="dn-disc" cx="22" cy="22" r="9.5" mask="url(#dnCut)"/>
+      <g class="dn-sparks">
+        <circle cx="33.5" cy="11.5" r="1.35"/>
+        <circle cx="11.5" cy="30" r="1.05"/>
+        <circle cx="31" cy="31.5" r="1.15"/>
+      </g>
+    </svg>
+  </span>
+</button>
 
 <!-- ================= Marke ================= -->
 <header class="mark">

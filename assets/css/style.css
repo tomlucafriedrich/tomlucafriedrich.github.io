@@ -26,6 +26,29 @@
   --fur:         #3E342B;
   --fur-warm:    #7A6350;
   --fur-pale:    #D9CDB6;
+  --eye:         var(--paper);     /* Augenlicht der Tiere */
+
+  /* Schatten und Lasuren — im Dark Mode ausgetauscht */
+  --shade-1:     rgba(120,98,68,.16);
+  --shade-2:     rgba(120,98,68,.22);
+  --shade-3:     rgba(120,98,68,.30);
+  --ground-shade:rgba(88,104,66,.34);
+  --wash-top:    rgba(255,252,244,.75);
+  --wash-bottom: rgba(150,128,96,.14);
+
+  /* Kontaktknöpfe */
+  --btn-bg:          #FBF8F1;
+  --btn-text:        #2A2420;
+  --btn-edge:        rgba(42,36,32,.28);
+  --btn-edge-strong: rgba(42,36,32,.55);
+  --btn-sheen:       rgba(255,255,255,.9);
+
+  /* Tag/Nacht */
+  --sun:        #E0952F;
+  --moon-face:  #EDE7D6;
+  --moon-spark: #D8D2BE;
+  --star:       #F2EEE1;
+  --star-glow:  rgba(226,232,255,.55);
 
   --font: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
   /* Fallbacks für die nicht-lateinischen Begrüßungen */
@@ -60,8 +83,8 @@ body::before{
   /* leichte Wölbung, als läge ein Bogen auf dem Tisch */
   content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
   background:
-    radial-gradient(120% 90% at 50% 0%,   rgba(255,252,244,.75), transparent 62%),
-    radial-gradient(100% 80% at 50% 100%, rgba(150,128,96,.14),  transparent 60%);
+    radial-gradient(120% 90% at 50% 0%,   var(--wash-top),    transparent 62%),
+    radial-gradient(100% 80% at 50% 100%, var(--wash-bottom), transparent 60%);
 }
 
 .grain{
@@ -83,15 +106,24 @@ body::before{
 .sky{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden}
 .assets{position:absolute;width:0;height:0;overflow:hidden}
 
-.clouds{position:absolute;inset:0}
+/* Die Verabschiedung liegt auf den Schichten, nicht auf den Wolken selbst:
+   die tragen schon die endlose drift-Animation, und ein transform auf
+   demselben Element würde von ihr überschrieben. */
+.clouds{
+  position:absolute;inset:0;
+  transition:transform 1.9s cubic-bezier(.35,.02,.2,1), opacity 1.5s ease;
+  will-change:transform,opacity;
+}
+.sky.is-leaving .clouds--far {transform:translate(26vw,-26vh);opacity:0}
+.sky.is-leaving .clouds--near{transform:translate(44vw,-38vh);opacity:0}
 .cloud{
   position:absolute;
-  filter:url(#torn) drop-shadow(3px 6px 5px rgba(120,98,68,.16));
+  filter:url(#torn) drop-shadow(3px 6px 5px var(--shade-1));
   will-change:transform;
 }
 .cloud use{fill:var(--cloud)}
 .clouds--far .cloud use{fill:var(--cloud-far)}
-.clouds--far .cloud{filter:url(#torn) drop-shadow(2px 4px 4px rgba(120,98,68,.10));opacity:.85}
+.clouds--far .cloud{filter:url(#torn) drop-shadow(2px 4px 4px var(--shade-1));opacity:.85}
 
 /* Größe, Höhe, Tempo — vordere Wolken ziehen schneller (Parallaxe) */
 .cloud--a{width:300px;top:12%;animation:drift 132s linear infinite}
@@ -116,7 +148,7 @@ body::before{
 .gull__bob{animation:bob 5.2s ease-in-out infinite}
 .gull__svg{
   width:100%;height:auto;overflow:visible;
-  filter:drop-shadow(2px 3px 3px rgba(120,98,68,.18));
+  filter:drop-shadow(2px 3px 3px var(--shade-1));
 }
 .gull__wing,.gull__body{fill:var(--ink)}
 .gull__wing{transform-box:view-box;transform-origin:30px 15px}
@@ -249,7 +281,7 @@ body::before{
   box-shadow:
     0 0 0 3px var(--paper),
     0 0 0 5px var(--ink),
-    4px 7px 10px rgba(120,98,68,.22);
+    4px 7px 10px var(--shade-2);
   overflow:hidden;
   transition:transform .45s var(--ease);
 }
@@ -296,7 +328,8 @@ body::before{
   overflow:hidden;
   display:flex;align-items:center;justify-content:center;
   padding:20svh clamp(18px,5vw,60px) 34svh;
-  background:linear-gradient(180deg, #F8EFE9 0%, var(--paper) 46%);
+  /* Kein eigener Hintergrund: der Bogen soll über beide Abschnitte
+     durchlaufen, sonst sieht man beim Scrollen eine Kante. */
 }
 
 /* ---------- Hügel im Hintergrund ---------- */
@@ -328,15 +361,22 @@ body::before{
 .tree::after{
   content:"";position:absolute;left:50%;bottom:0;transform:translateX(-50%);
   width:44%;height:26px;pointer-events:none;
-  background:radial-gradient(ellipse at 50% 50%, rgba(88,104,66,.34), transparent 70%);
+  background:radial-gradient(ellipse at 50% 50%, var(--ground-shade), transparent 70%);
 }
 .tree--far::after{width:36%;height:16px;opacity:.6}
-/* Ferne Bäume blasser — die Farben erben in die <use>-Kopien hinein */
+/* Ferne Bäume blasser — die Farben erben in die <use>-Kopien hinein.
+   Nachts brauchen sie eigene Werte, sonst leuchten sie im Dunkeln weiter. */
 .tree--far{
   --bark:        #6B584A;
   --bloom-back:  #EFC4CE;
   --bloom-mid:   #F6D7DF;
   --bloom-front: #FCEAEF;
+}
+[data-theme="dark"] .tree--far{
+  --bark:        #2A2434;
+  --bloom-back:  #4C3644;
+  --bloom-mid:   #5E4455;
+  --bloom-front: #745566;
 }
 .tree--n1{left:-5%}
 .tree--n2{right:-5%}
@@ -388,11 +428,11 @@ body::before{
   line-height:0;
 }
 .critter__body{display:block;transform-origin:50% 92%}
-.critter svg{width:100%;height:auto;display:block;filter:drop-shadow(2px 4px 3px rgba(120,98,68,.20))}
+.critter svg{width:100%;height:auto;display:block;filter:drop-shadow(2px 4px 3px var(--shade-2))}
 .critter .ink{fill:var(--fur)}
 .critter .warm{fill:var(--fur-warm)}
 .critter .pale{fill:var(--fur-pale)}
-.critter .eye{fill:var(--paper)}
+.critter .eye{fill:var(--eye)}
 .critter .stroke{fill:none;stroke:var(--fur);stroke-linecap:round;stroke-linejoin:round}
 .critter:focus-visible{outline:3px solid var(--accent);outline-offset:6px;border-radius:8px}
 
@@ -491,39 +531,171 @@ body::before{
 .links{display:flex;flex-wrap:wrap;gap:clamp(10px,1.6vw,18px);justify-content:center}
 
 .paperbtn{
-  position:relative;isolation:isolate;
+  position:relative;
   display:inline-flex;align-items:center;gap:11px;
-  padding:14px clamp(18px,2vw,26px);
-  text-decoration:none;color:var(--ink);
-  font-weight:500;font-size:clamp(.88rem,1.05vw,1rem);
-  transition:transform .25s var(--ease);
+  padding:13px clamp(18px,2vw,24px);
+  text-decoration:none;color:var(--btn-text);
+  font-weight:500;font-size:clamp(.88rem,1.05vw,1rem);letter-spacing:.005em;
+  background:var(--btn-bg);
+  border:1.5px solid var(--btn-edge);
+  border-radius:8px;
+  box-shadow:0 1px 1px var(--shade-1), 0 6px 16px -8px var(--shade-3);
+  transition:transform .22s var(--ease), box-shadow .22s var(--ease),
+             border-color .22s var(--ease), background .22s var(--ease);
 }
-/* Fläche und Schatten liegen in Pseudoelementen, damit der gerissene
-   Filter die Schrift nicht mitverzerrt. */
-.paperbtn::before,.paperbtn::after{
-  content:"";position:absolute;inset:0;
-  border-radius:15px 12px 16px 11px / 12px 16px 11px 15px;
-}
+/* Ein feiner heller Grat oben: lässt die Karte auf dem Papier aufliegen,
+   ohne den gerissenen Rand, der vorher zu verspielt wirkte. */
 .paperbtn::before{
-  z-index:-1;background:var(--cloud);border:2.5px solid var(--ink);
-  filter:url(#tornSoft);transition:background .25s var(--ease);
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  box-shadow:inset 0 1px 0 var(--btn-sheen);
 }
-.paperbtn::after{
-  z-index:-2;background:rgba(120,98,68,.30);
-  transform:translate(4px,6px);filter:url(#tornSoft) blur(2px);
-  transition:transform .25s var(--ease);
+.paperbtn:hover{
+  transform:translateY(-2px);
+  border-color:var(--btn-edge-strong);
+  box-shadow:0 1px 1px var(--shade-1), 0 12px 22px -10px var(--shade-3);
 }
-.paperbtn:hover{transform:translate(-2px,-3px)}
-.paperbtn:hover::before{background:var(--marker)}
-.paperbtn:hover::after{transform:translate(7px,10px)}
-.paperbtn:active{transform:translate(1px,2px)}
-.paperbtn:active::after{transform:translate(2px,3px)}
-.paperbtn:focus-visible{outline:3px solid var(--accent);outline-offset:5px}
+.paperbtn:active{transform:translateY(0);box-shadow:0 1px 1px var(--shade-1)}
+.paperbtn:focus-visible{outline:2.5px solid var(--accent);outline-offset:3px}
 
 .paperbtn__icon{width:20px;height:20px;flex:none}
 .paperbtn__icon svg{
-  width:100%;height:100%;fill:none;stroke:var(--ink);
+  width:100%;height:100%;fill:none;stroke:var(--btn-text);
   stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;
+}
+
+/* =========================================================
+   Tag / Nacht — Umschalter oben rechts
+   ========================================================= */
+.daynight{
+  position:fixed;top:0;right:0;z-index:56;
+  margin:clamp(18px,3vw,34px);
+  width:46px;height:46px;padding:0;
+  display:grid;place-items:center;cursor:pointer;
+  background:var(--btn-bg);
+  border:1.5px solid var(--btn-edge);
+  border-radius:12px;
+  box-shadow:0 1px 1px var(--shade-1), 0 6px 16px -8px var(--shade-3);
+  -webkit-tap-highlight-color:transparent;
+  transition:transform .22s var(--ease), box-shadow .22s var(--ease),
+             border-color .22s var(--ease), background .5s var(--ease);
+}
+.daynight:hover{transform:translateY(-2px);border-color:var(--btn-edge-strong)}
+.daynight:active{transform:translateY(0)}
+.daynight:focus-visible{outline:2.5px solid var(--accent);outline-offset:3px}
+.daynight__face{display:block;width:26px;height:26px}
+.daynight__face svg{width:100%;height:100%;display:block;overflow:visible}
+
+.dn-disc{fill:var(--sun);transition:fill .5s var(--ease)}
+.dn-rays path{fill:none;stroke:var(--sun);stroke-width:2.4;stroke-linecap:round}
+.dn-rays,.dn-bite,.dn-sparks circle{transform-box:view-box;transform-origin:22px 22px}
+.dn-rays{transition:transform .55s cubic-bezier(.34,1.45,.5,1), opacity .3s ease}
+/* Der Biss ist ein Loch in der Maske. Im Hellen liegt er außerhalb der
+   Scheibe (volle Sonne), im Dunkeln schiebt er sich darüber und schneidet
+   die Sichel heraus. */
+.dn-bite{transform:translate(15px,-15px);transition:transform .55s cubic-bezier(.34,1.3,.5,1)}
+.dn-sparks circle{
+  fill:var(--moon-spark);opacity:0;transform:scale(0);
+  transition:opacity .35s ease, transform .5s cubic-bezier(.34,1.5,.5,1);
+}
+
+[data-theme="dark"] .dn-rays{transform:scale(.3) rotate(55deg);opacity:0}
+[data-theme="dark"] .dn-bite{transform:translate(6.5px,-5.5px)}
+[data-theme="dark"] .dn-disc{fill:var(--moon-face)}
+[data-theme="dark"] .dn-sparks circle{opacity:1;transform:scale(1)}
+[data-theme="dark"] .dn-sparks circle:nth-child(1){transition-delay:.16s}
+[data-theme="dark"] .dn-sparks circle:nth-child(2){transition-delay:.26s}
+[data-theme="dark"] .dn-sparks circle:nth-child(3){transition-delay:.36s}
+
+/* =========================================================
+   Nachthimmel — liegt fest hinter beiden Abschnitten
+   ========================================================= */
+.stars{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  opacity:0;transition:opacity .8s var(--ease);
+}
+[data-theme="dark"] .stars{opacity:1}
+
+.stars__field i{
+  position:absolute;left:var(--x);top:var(--y);
+  width:calc(2.2px * var(--s));height:calc(2.2px * var(--s));
+  border-radius:50%;background:var(--star);
+  box-shadow:0 0 calc(5px * var(--s)) var(--star-glow);
+  animation:twinkle var(--d) ease-in-out var(--dl) infinite;
+}
+@keyframes twinkle{
+  0%,100%{opacity:.28;transform:scale(.8)}
+  50%    {opacity:1;  transform:scale(1.2)}
+}
+
+.moon{
+  position:absolute;top:11%;right:15%;
+  width:clamp(56px,7vw,96px);
+  opacity:0;transform:translateY(-14px) scale(.92);
+  transition:opacity .9s var(--ease), transform .9s var(--ease);
+}
+[data-theme="dark"] .moon{opacity:1;transform:none}
+.moon svg{width:100%;height:auto;display:block}
+.moon__disc{fill:var(--moon-face)}
+
+/* =========================================================
+   Nachtfassung der Szene
+   ========================================================= */
+[data-theme="dark"]{
+  --paper:      #171B26;
+  --paper-deep: #10131C;
+  --cloud:      #2C3446;
+  --cloud-far:  #232A39;
+  --ink:        #E9E3D5;
+  --ink-soft:   #9C9585;
+  --accent:     #E8834F;
+  --marker:     #A87A24;
+
+  --bark:        #14111A;
+  --bloom-back:  #6A4657;
+  --bloom-mid:   #8A5D6F;
+  --bloom-front: #AE7B8C;
+  --hill-back:   #232B33;
+  --hill-front:  #1D242C;
+  --grass-far:   #2C3730;
+  --grass-mid:   #242E28;
+  --grass-near:  #1C2520;
+  --fur:         #0D0F14;
+  --fur-warm:    #2E2A36;
+  --fur-pale:    #4A4553;
+  --eye:         #CFC8B6;
+
+  --shade-1:     rgba(0,0,0,.42);
+  --shade-2:     rgba(0,0,0,.50);
+  --shade-3:     rgba(0,0,0,.60);
+  --ground-shade:rgba(0,0,0,.48);
+  --wash-top:    rgba(96,120,190,.13);
+  --wash-bottom: rgba(0,0,0,.42);
+
+  --btn-bg:          #232A38;
+  --btn-text:        #EDE7DA;
+  --btn-edge:        rgba(237,231,218,.24);
+  --btn-edge-strong: rgba(237,231,218,.58);
+  --btn-sheen:       rgba(255,255,255,.10);
+}
+
+/* Multiply frisst auf dunklem Grund die Faser weg — nachts wird sie
+   aufgehellt statt abgedunkelt. */
+[data-theme="dark"] .grain{mix-blend-mode:screen;opacity:.13}
+[data-theme="dark"] .portrait__base{filter:brightness(.82) saturate(.86)}
+/* Die Skizzen sind dunkle Tinte auf Transparenz und wären nachts
+   unsichtbar. invert dreht die Tinte ins Helle, die Deckung bleibt. */
+[data-theme="dark"] .portrait__frame{filter:invert(1) brightness(1.06)}
+[data-theme="dark"] .moon svg{filter:drop-shadow(0 0 20px rgba(233,227,213,.22))}
+
+/* =========================================================
+   Weicher Übergang beim Umschalten
+   ========================================================= */
+body{transition:background-color .55s var(--ease), color .55s var(--ease)}
+.hill,.grass,.cloud use,.tree__wood path,.tree__bloom ellipse,
+.critter .ink,.critter .warm,.critter .pale,.critter .eye,.critter .stroke,
+.gull__wing,.gull__body,.mk-core,.mk-orbit,.petal i{
+  transition:fill .55s var(--ease), stroke .55s var(--ease),
+             background-color .55s var(--ease);
 }
 
 /* =========================================================
@@ -537,20 +709,27 @@ body::before{
   .cloud--a{width:220px}
 
   .garden{padding:10svh 20px 34svh}
-  .tree--near{width:clamp(190px,54vw,270px);bottom:15%}
-  .tree--n1{left:-18%}
-  .tree--n2{right:-18%}
-  .tree--far{width:clamp(92px,26vw,150px);bottom:26%}
-  .tree--f1{left:8%}
-  .tree--f2{right:10%}
+
+  /* Auf dem Handy rücken die vorderen Bäume nach außen, bis nur noch ihr
+     Stamm am Rand hereinragt. Erst dadurch bleibt die Mitte für die zweite
+     Reihe frei — sonst verdeckten sie sie fast vollständig. */
+  .tree--near{width:clamp(175px,48vw,250px);bottom:13%}
+  .tree--n1{left:-20%}
+  .tree--n2{right:-20%}
+  .tree--far{width:clamp(115px,33vw,180px);bottom:25%}
+  .tree--f1{left:16%}
+  .tree--f2{right:18%}
+
   .links{flex-direction:column;align-items:stretch}
   .paperbtn{justify-content:center}
-  .critter--deer{left:6%;bottom:15%}
-  .critter--bird{left:30%}
-  .critter--rabbit{right:10%}
+
+  /* Tiere neben die Stämme, nicht davor */
+  .critter--deer{left:9%;bottom:14%}
+  .critter--bird{left:36%;bottom:5%}
+  .critter--rabbit{right:11%}
   /* left, nicht right: die Grundregel setzt left — bei gesetzter Breite
      gewinnt left, die Regel bliebe sonst wirkungslos. */
-  .critter--butterfly{left:8%;bottom:54%}
+  .critter--butterfly{left:7%;bottom:56%}
 }
 
 /* =========================================================
@@ -563,8 +742,11 @@ body::before{
   .tree__svg,.petal,.petal i,.scrollhint__arrow,
   .critter--deer .critter__head,.critter--rabbit .critter__ears,
   .critter--bird .critter__body,.critter--butterfly .critter__body,
-  .critter--butterfly .wing{animation:none}
+  .critter--butterfly .wing,.stars__field i{animation:none}
   .paperbtn{transition:none}
+  /* Wolken verabschieden sich dann nur durch Ausblenden, ohne den weiten Weg */
+  .sky.is-leaving .clouds--far,
+  .sky.is-leaving .clouds--near{transform:none}
   .gull{transform:translate(52vw,-4vh)}
   .cloud--a{transform:translateX(6vw)}
   .cloud--b{transform:translateX(58vw)}

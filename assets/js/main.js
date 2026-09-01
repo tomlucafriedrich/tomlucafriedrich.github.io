@@ -2,6 +2,9 @@
    Landingpage
    1. Gruß rotiert durch mehrere Sprachen
    2. Portrait wird beim Hovern zum handgezeichneten Daumenkino
+   3. Scrollhinweis und davonziehende Wolken
+   4. Tag/Nacht-Umschalter
+   5. Anklickbare Tiere
    ========================================================= */
 (function () {
   "use strict";
@@ -156,22 +159,61 @@
   }
 
   /* =======================================================
-     3. Hinweis zum Scrollen — blendet aus, sobald er wirkt
+     3. Scrollen: Hinweis ausblenden, Wolken davonziehen lassen
      ======================================================= */
   var hint = document.getElementById("scrollhint");
-  if (hint) {
-    var hidden = false;
-    window.addEventListener("scroll", function () {
-      var gone = window.scrollY > window.innerHeight * 0.12;
-      if (gone !== hidden) {
-        hidden = gone;
-        hint.classList.toggle("is-gone", gone);
-      }
-    }, { passive: true });
+  var sky = document.querySelector(".sky");
+  var hintGone = false, cloudsGone = false;
+
+  function onScroll() {
+    var y = window.scrollY, vh = window.innerHeight;
+
+    if (hint) {
+      var g = y > vh * 0.12;
+      if (g !== hintGone) { hintGone = g; hint.classList.toggle("is-gone", g); }
+    }
+    // Die Wolken verlassen den Himmel, sobald es ernsthaft nach unten geht,
+    // und kommen zurück, wenn man wieder hochscrollt.
+    if (sky) {
+      var c = y > vh * 0.18;
+      if (c !== cloudsGone) { cloudsGone = c; sky.classList.toggle("is-leaving", c); }
+    }
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  /* =======================================================
+     4. Tag / Nacht
+     ======================================================= */
+  var toggle = document.getElementById("daynight");
+  if (toggle) {
+    var root = document.documentElement;
+    var meta = document.querySelector('meta[name="theme-color"]');
+
+    function applyTheme(mode) {
+      root.setAttribute("data-theme", mode);
+      var dark = mode === "dark";
+      toggle.setAttribute("aria-pressed", String(dark));
+      toggle.setAttribute("aria-label",
+        dark ? "Tagansicht einschalten" : "Nachtansicht einschalten");
+      if (meta) meta.setAttribute("content", dark ? "#171B26" : "#F1EBDD");
+      try { localStorage.setItem("tlf-theme", mode); } catch (e) { /* ignoriert */ }
+    }
+
+    // Der Ausgangszustand steht schon im <head>; hier nur die Beschriftung
+    // nachziehen, ohne erneut zu speichern.
+    var start = root.getAttribute("data-theme") === "dark";
+    toggle.setAttribute("aria-pressed", String(start));
+    toggle.setAttribute("aria-label",
+      start ? "Tagansicht einschalten" : "Nachtansicht einschalten");
+
+    toggle.addEventListener("click", function () {
+      applyTheme(root.getAttribute("data-theme") === "dark" ? "light" : "dark");
+    });
   }
 
   /* =======================================================
-     4. Tiere: beim Anklicken eine kurze Vorstellung
+     5. Tiere: beim Anklicken eine kurze Vorstellung
      ======================================================= */
   var critters = document.querySelectorAll(".critter");
   Array.prototype.forEach.call(critters, function (critter) {
