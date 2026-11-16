@@ -2,7 +2,7 @@
    Landingpage
    1. Gruß rotiert durch mehrere Sprachen
    2. Portrait wird beim Hovern zum handgezeichneten Daumenkino
-   3. Scrollhinweis und davonziehende Wolken
+   3. Scrollen: Weltall-Parallaxe, Hinweise, davonziehende Wolken
    4. Tag/Nacht-Umschalter
    5. Anklickbare Tiere
    ========================================================= */
@@ -159,27 +159,79 @@
   }
 
   /* =======================================================
-     3. Scrollen: Hinweis ausblenden, Wolken davonziehen lassen
+     3. Scrollen: Weltall, Hinweise, davonziehende Wolken
      ======================================================= */
-  var hint = document.getElementById("scrollhint");
+  var rootEl = document.documentElement;
+  var space = document.querySelector(".space");
+  var tear = document.querySelector(".tear");
+  var hero = document.querySelector(".hero");
   var sky = document.querySelector(".sky");
-  var hintGone = false, cloudsGone = false;
+  var spaceHint = document.getElementById("spacehint");
+  var hint = document.getElementById("scrollhint");
+  var themeMeta = document.querySelector('meta[name="theme-color"]');
+
+  var state = { inSpace: null, spaceHint: null, hint: null, clouds: null };
+  var queued = false;
+  var lastSp = null;
+
+  // Klasse nur anfassen, wenn sich der Zustand wirklich ändert
+  function flip(key, on, el, cls) {
+    if (state[key] === on) return false;
+    state[key] = on;
+    if (el) el.classList.toggle(cls, on);
+    return true;
+  }
+
+  function themeColor() {
+    if (!themeMeta) return;
+    var dark = rootEl.getAttribute("data-theme") === "dark";
+    themeMeta.setAttribute("content",
+      state.inSpace ? "#0B0D17" : (dark ? "#171B26" : "#F1EBDD"));
+  }
 
   function onScroll() {
+    queued = false;
     var y = window.scrollY, vh = window.innerHeight;
+    var spaceH = space ? space.offsetHeight : 0;
+    var heroTop = hero ? hero.offsetTop : 0;
 
-    if (hint) {
-      var g = y > vh * 0.12;
-      if (g !== hintGone) { hintGone = g; hint.classList.toggle("is-gone", g); }
+    if (space) {
+      // Fortschritt durchs Weltall: treibt die Parallaxe des schwarzen Lochs.
+      // Am Abschnitt gesetzt, nicht an :root — sonst würde jede Änderung die
+      // Stile der ganzen Seite neu berechnen.
+      var sp = Math.min(1, y / spaceH).toFixed(4);
+      if (sp !== lastSp) { lastSp = sp; space.style.setProperty("--sp", sp); }
+
+      // Solange Dunkles unter dem Zeichen oben links liegt. Dazu zählt auch
+      // der Rissstreifen, der unter dem Abschnitt noch ein Stück weiterhängt:
+      // rund 60 % seiner Höhe sind deckend dunkel, das Zeichen sitzt ~44 px tief.
+      var tearH = tear ? tear.offsetHeight : 0;
+      if (flip("inSpace", y < spaceH + tearH * 0.6 - 44, rootEl, "in-space")) themeColor();
     }
-    // Die Wolken verlassen den Himmel, sobald es ernsthaft nach unten geht,
+
+    flip("spaceHint", y > vh * 0.12, spaceHint, "is-gone");
+    flip("hint", y > heroTop + vh * 0.12, hint, "is-gone");
+
+    // Die Wolken verlassen den Himmel, sobald es weiter zur Wiese geht,
     // und kommen zurück, wenn man wieder hochscrollt.
-    if (sky) {
-      var c = y > vh * 0.18;
-      if (c !== cloudsGone) { cloudsGone = c; sky.classList.toggle("is-leaving", c); }
-    }
+    flip("clouds", y > heroTop + vh * 0.18, sky, "is-leaving");
   }
-  window.addEventListener("scroll", onScroll, { passive: true });
+
+  // Höchstens einmal pro Bild rechnen, egal wie oft das Scroll-Ereignis feuert.
+  // Dazu ein nachlaufender Timer: fällt ein Bild-Rückruf aus (Tab im
+  // Hintergrund, Kaltstart), stünde sonst der letzte Zustand falsch da —
+  // etwa ein helles Zeichen auf hellem Papier.
+  var trailing = null;
+  function requestScroll() {
+    if (!queued) {
+      queued = true;
+      window.requestAnimationFrame(onScroll);
+    }
+    clearTimeout(trailing);
+    trailing = setTimeout(onScroll, 140);
+  }
+  window.addEventListener("scroll", requestScroll, { passive: true });
+  window.addEventListener("resize", requestScroll);
   onScroll();
 
   /* =======================================================
@@ -188,7 +240,6 @@
   var toggle = document.getElementById("daynight");
   if (toggle) {
     var root = document.documentElement;
-    var meta = document.querySelector('meta[name="theme-color"]');
 
     function applyTheme(mode) {
       root.setAttribute("data-theme", mode);
@@ -196,7 +247,7 @@
       toggle.setAttribute("aria-pressed", String(dark));
       toggle.setAttribute("aria-label",
         dark ? "Tagansicht einschalten" : "Nachtansicht einschalten");
-      if (meta) meta.setAttribute("content", dark ? "#171B26" : "#F1EBDD");
+      themeColor();              // im Weltall bleibt die Browserleiste dunkel
       try { localStorage.setItem("tlf-theme", mode); } catch (e) { /* ignoriert */ }
     }
 

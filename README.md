@@ -1,7 +1,8 @@
 # Tom Luca Friedrich — Persönliche Webseite
 
-Statische Seite in Papieroptik, zwei Abschnitte untereinander: die Begrüßung im
-Himmel und darunter eine Kirschblütenwiese mit den Kontaktknöpfen. Kein
+Statische Seite in Papieroptik, drei Abschnitte untereinander: oben das Weltall
+mit einem schwarzen Loch aus geschichtetem Papier, darunter die Begrüßung im
+Himmel und zuletzt eine Kirschblütenwiese mit den Kontaktknöpfen. Kein
 Build-Prozess, keine Abhängigkeiten — reines HTML, CSS und JavaScript. Läuft damit
 direkt und kostenlos auf GitHub Pages.
 
@@ -37,6 +38,9 @@ assets/img/portrait.jpg    Quelle für den Generator (wird nicht angezeigt)
 assets/img/favicon.svg     Icon im Browser-Tab
 tools/make_sketches.py     Erzeugt Avatar und Skizzen neu
 tools/make_trees.py        Erzeugt die Kirschbäume und setzt sie in index.html ein
+tools/make_space.py        Rendert das schwarze Loch und die Papierfaser, schreibt das Weltall-Markup
+assets/img/space/          Papierschichten des schwarzen Lochs (erzeugt)
+assets/img/paper-tile.webp Kachelbare Papierfaser des Bogens (erzeugt)
 .nojekyll                  Schaltet Jekyll-Verarbeitung bei GitHub Pages ab
 ```
 
@@ -58,6 +62,9 @@ tools/make_trees.py        Erzeugt die Kirschbäume und setzt sie in index.html 
 | `--btn-*`      | Kontaktknöpfe                      |
 | `--sun`, `--moon-face` | Sonne und Mond im Umschalter |
 | `--star*`      | Sterne am Nachthimmel              |
+| `--space`      | Bogen des Weltalls (in beiden Fassungen dunkel) |
+| `--rim`, `--cut-shadow` | heller Risskern und Schatten der Papierfilter |
+| `--tex-veil`   | dämpft nachts die Papierfaser      |
 
 Die Nachtfassung steht gesammelt im Block `[data-theme="dark"]` weiter unten im
 Stylesheet: dort werden dieselben Variablen mit Nachtwerten überschrieben. Für
@@ -83,6 +90,34 @@ erzeugt `avatar.jpg` und fünf Skizzen-Frames. Über `FRAMES` lässt sich die An
 ändern — dann auch die `<img class="portrait__frame">`-Zeilen in `index.html`
 anpassen. Der leichte Unterschied zwischen den Frames („boil") entsteht durch ein
 zufälliges Verzerrungsfeld je Bild.
+
+## Das Weltall
+
+Das schwarze Loch besteht aus vorgerenderten Papierschichten: ein Medaillon
+(schwarze Mitte + drei Lichtbögen) und vier Ringe der Scheibe. Die Scheibe ist
+eine flachgedrückte Ebene, in der die Ringe einzeln kreisen — innen schneller
+als außen. Neu erzeugen:
+
+```bash
+python tools/make_space.py
+```
+
+`--images` rendert nur die Bilder (dauert etwa 20 s), `--html` schreibt nur
+Sterne, Nebel, Scheibenebenen und Risskante in `index.html` — zwischen den
+Markierungen `COSMOS:` und `TEAR:`; von Hand nichts darin ändern. Farben und
+Radien der Ringe stehen in `RINGS`, die der Lichtbögen in `make_core()`.
+
+Die Ringe tragen bewusst kein gerichtetes Licht: sie drehen sich, ein
+eingebackenes Streiflicht würde mit im Kreis wandern.
+
+## Papier
+
+Jede Form wird durch einen der Filter am Ende von `index.html` zum Blatt
+(`#paper`, `#paperUp`, `#paperSoft`, `#paperPlain`, `#paperSpace`, `#cut`):
+verzogene Kante, heller Faserkern, Fasern in der Fläche, Schatten auf die
+Schicht darunter. Die Farben von Kern und Schatten kommen aus `--rim` und
+`--cut-shadow` im Stylesheet. Die Faser des Bogens selbst ist die Kachel
+`paper-tile.webp` im Seitenhintergrund; nachts dämpft `--tex-veil` sie.
 
 ## Die Wiese
 
@@ -128,10 +163,12 @@ Sonne und Mond sind dasselbe SVG. Der Mond entsteht, indem ein Kreis in einer
 Maske über die Scheibe fährt und die Sichel ausschneidet; die Strahlen schrumpfen
 gleichzeitig weg. Alles in `.dn-*` im Stylesheet.
 
-Die Sterne (`.stars`) liegen fest hinter beiden Abschnitten und sind im hellen
-Modus auf `opacity:0`. Mehr oder weniger Sterne: die `<i>`-Zeilen in `index.html`
-ergänzen oder löschen — jede trägt Position, Größe, Dauer und Versatz als
-CSS-Variablen.
+Sonne, Mond und Sterne (`.stars`) liegen fest hinter Himmel und Wiese. Tags
+steht dort die Papiersonne mit langsam kreisenden Strahlen, nachts tauschen
+Mond und Sterne sie aus. Mehr oder weniger Sterne: die `<i>`-Zeilen in
+`index.html` ergänzen oder löschen — jede trägt Position, Größe, Dauer und
+Versatz als CSS-Variablen. Über dem Weltall sind sie verdeckt; das hat seine
+eigenen Papiersterne.
 
 **Wolkenabflug** — beim Herunterscrollen bekommt `.sky` die Klasse `is-leaving`,
 die beiden Wolkenschichten ziehen dann aus dem Bild. Die Bewegung liegt auf den
@@ -141,9 +178,10 @@ Schichten, nicht auf den Wolken selbst: die tragen bereits ihre endlose
 
 ## Barrierefreiheit
 
-Respektiert `prefers-reduced-motion`: Wolken, Möwe, Bäume, Blütenblätter, Sterne
-und Sprachrotation stehen dann still; die Wolken verabschieden sich nur durch
-Ausblenden statt durch den weiten Weg aus dem Bild. Die Tier-Animationen bleiben — die löst man
+Respektiert `prefers-reduced-motion`: Ringe und Schnipsel des schwarzen Lochs,
+Wolken, Möwe, Bäume, Blütenblätter, Sterne, Sonnenstrahlen und Sprachrotation
+stehen dann still; das Loch erscheint ohne Einblendung, und die Wolken
+verabschieden sich nur durch Ausblenden. Die Tier-Animationen bleiben — die löst man
 selbst per Klick aus. Die Überschrift steht zusätzlich als vollständiger Satz für Screenreader im
 Markup, damit der rotierende Gruß nicht ständig vorgelesen wird. Auf Touchgeräten
 zeigt ein Tippen auf das Portrait die Skizzen.
