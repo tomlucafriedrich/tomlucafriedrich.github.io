@@ -1,0 +1,957 @@
+/* =========================================================
+   Tom Luca Friedrich
+   Drei Blätter untereinander: Weltall, Himmel, Wiese.
+   Alles ist Papier — jede Form trägt Fasern, einen hellen
+   Risskern an der Kante und wirft Schatten auf die Schicht
+   darunter (siehe die Papierfilter am Ende von index.html).
+   ========================================================= */
+
+:root{
+  --paper:      #F1EBDD;   /* Bogen */
+  --paper-deep: #E7DFCD;   /* Schattenseite des Papiers */
+  --cloud:      #FBF8F1;   /* helleres Papier für die Wolken */
+  --cloud-far:  #F6F1E6;
+  --cloud-under:#EAE3D3;   /* zweites Blatt unter den Wolken */
+  --ink:        #26211E;
+  --ink-soft:   #6E6455;
+  --accent:     #D2603A;
+  --marker:     #F3C86A;   /* Textmarker-Gelb */
+
+  /* Wiese und Kirschblüte */
+  --bark:        #4A362B;
+  --bloom-back:  #E0A0B2;
+  --bloom-mid:   #F0BDCA;
+  --bloom-front: #FBDDE5;
+  --hill-back:   #DCDFC6;
+  --hill-front:  #CFD6B4;
+  --grass-far:   #C2CFA3;
+  --grass-mid:   #AFC08E;
+  --grass-near:  #9CAF79;
+  --fur:         #3E342B;
+  --fur-warm:    #7A6350;
+  --fur-pale:    #D9CDB6;
+  --eye:         var(--paper);     /* Augenlicht der Tiere */
+
+  /* Schatten und Lasuren — im Dark Mode ausgetauscht */
+  --shade-1:     rgba(120,98,68,.16);
+  --shade-2:     rgba(120,98,68,.22);
+  --shade-3:     rgba(120,98,68,.30);
+  --ground-shade:rgba(88,104,66,.34);
+  --wash-top:    rgba(255,252,244,.75);
+  --wash-bottom: rgba(150,128,96,.14);
+
+  /* Kontaktknöpfe */
+  --btn-bg:          #FBF8F1;
+  --btn-text:        #2A2420;
+  --btn-edge:        rgba(42,36,32,.28);
+  --btn-edge-strong: rgba(42,36,32,.55);
+  --btn-sheen:       rgba(255,255,255,.9);
+
+  /* Tag/Nacht */
+  --sun:        #E0952F;
+  --moon-face:  #EDE7D6;
+  --moon-spark: #D8D2BE;
+  --star:       #F2EEE1;
+  --sun-ray:    #EDB453;
+  --sun-inner:  #F3C76E;
+
+  /* Papier: Risskern und Schlagschatten der Filter (.rim / .shade) */
+  --rim:          #FFFFFF;
+  --rim-a:        .55;
+  --cut-shadow:   #5C4426;
+  --cut-shadow-a: .30;
+  --btn-under:    #E2D9C6;        /* das zweite Blatt unter den Karten */
+  --tex-veil:     rgba(241,235,221,0);   /* Schleier über der Papierfaser */
+
+  /* Weltall: bleibt in beiden Fassungen dunkel */
+  --space:      #0B0D17;
+  --space-ink:  #ECE6D8;
+
+  --font: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  /* Fallbacks für die nicht-lateinischen Begrüßungen */
+  --font-intl: "Space Grotesk", "Segoe UI", "Yu Gothic", "Hiragino Kaku Gothic ProN",
+               "Meiryo", "Microsoft YaHei", "PingFang SC", "Noto Sans", system-ui, sans-serif;
+
+  --ease: cubic-bezier(.22,.61,.36,1);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  /* Die Faser liegt IM Bogen und scrollt mit. Vorher lag ein fester
+     Korn-Schleier über dem Bildschirm, der über den Inhalt rutschte. */
+  background-color:var(--paper);
+  /* Oben ein Farbschleier, darunter die Faserkachel. Tags ist der Schleier
+     durchsichtig; nachts dämpft er die Faser, die auf dunklem Grund sonst
+     wie grober Stoff wirkt. */
+  background-image:linear-gradient(var(--tex-veil), var(--tex-veil)),
+                   url("../img/paper-tile.webp");
+  background-size:auto, 420px 420px;
+  background-blend-mode:normal, soft-light;
+  color:var(--ink);
+  font-family:var(--font);
+  overflow-x:hidden;            /* die Seite scrollt nur senkrecht */
+}
+
+img{display:block;max-width:100%}
+
+.sr-only{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;
+}
+
+/* =========================================================
+   Papier: Grundton, weiche Wölbung, Faserkorn
+   ========================================================= */
+body::before{
+  /* leichte Wölbung, als läge ein Bogen auf dem Tisch */
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(120% 90% at 50% 0%,   var(--wash-top),    transparent 62%),
+    radial-gradient(100% 80% at 50% 100%, var(--wash-bottom), transparent 60%);
+}
+
+/* Farben für die Papierfilter: Kern an der Risskante, Schatten darunter */
+.rim  {flood-color:var(--rim);flood-opacity:var(--rim-a)}
+.shade{flood-color:var(--cut-shadow);flood-opacity:var(--cut-shadow-a)}
+
+/* =========================================================
+   Weltall
+   ========================================================= */
+.space{
+  /* Kantenlänge des schwarzen Lochs; die Schnipselbahnen rechnen damit */
+  --bh:clamp(320px, min(118vw, 118svh), 1000px);
+  --sp:0;                       /* Scrollfortschritt 0..1, setzt main.js */
+  position:relative;z-index:10;
+  height:100svh;min-height:540px;
+  background-color:var(--space);
+  background-image:url("../img/paper-tile.webp");
+  background-size:420px 420px;
+  background-blend-mode:soft-light;
+  color:var(--space-ink);
+}
+/* Eigener Beschnitt: der Abschnitt selbst darf nicht beschneiden, sonst
+   verschwände die Risskante, die unten über den Himmel hängt. */
+.space__clip{position:absolute;inset:0;overflow:hidden}
+/* Unten läuft die Szene in den reinen Bogenton aus. Sonst endete sie an
+   einer geraden Linie, direkt über der Risskante — und die verriete, dass
+   Szene und Riss zwei getrennte Flächen sind. */
+.space__clip::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:clamp(70px,12vh,130px);
+  background:linear-gradient(to bottom, rgba(11,13,23,0), var(--space));
+  pointer-events:none;
+}
+
+.nebula{position:absolute;inset:0;width:100%;height:100%;display:block}
+
+/* ---------- Papiersterne ---------- */
+.cosmos{position:absolute;inset:-7% 0;will-change:transform}
+.cosmos--far {transform:translateY(calc(var(--sp) * 9vh))}
+.cosmos--near{transform:translateY(calc(var(--sp) * -8vh))}
+.st{
+  position:absolute;left:var(--x);top:var(--y);
+  width:calc(3px * var(--s));height:calc(3px * var(--s));
+  background:var(--c);border-radius:50%;
+  animation:starTw var(--d) ease-in-out var(--dl) infinite;
+}
+/* vierzackig ausgeschnitten */
+.st--4{
+  width:calc(7px * var(--s));height:calc(7px * var(--s));border-radius:0;
+  clip-path:polygon(50% 0,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 40%);
+}
+@keyframes starTw{
+  0%,100%{opacity:.35;transform:rotate(var(--r)) scale(.78)}
+  50%    {opacity:1;  transform:rotate(var(--r)) scale(1.12)}
+}
+
+/* ---------- Schwarzes Loch ----------
+   Aufbau von hinten nach vorn:
+     hintere Scheibenhälfte → Medaillon (Mitte + Lichtbögen) → vordere Hälfte
+   Die Scheibe ist eine flachgedrückte Ebene (scaleY), in der vier Ringe
+   einzeln kreisen — innen schneller als außen, wie auf einer echten Bahn.
+   Beide Hälften enthalten dieselben Ringe; sichtbar ist je nur eine Seite. */
+.bh{
+  position:absolute;left:50%;top:50%;
+  width:var(--bh);height:var(--bh);
+  margin:calc(var(--bh) / -2) 0 0 calc(var(--bh) / -2);
+  /* beim Herunterscrollen bleibt es zurück und wächst: man fällt darauf zu */
+  transform:translateY(calc(var(--sp) * 26svh)) scale(calc(1 + var(--sp) * .24));
+  will-change:transform;
+}
+.bh__tilt{position:absolute;inset:0;transform:rotate(-9deg)}
+.bh__half{position:absolute;inset:0}
+/* je ein Hauch Überlappung, sonst blitzt an der Naht eine Haarlinie */
+.bh__half--back {clip-path:inset(0 0 49.9% 0)}
+.bh__half--front{clip-path:inset(49.9% 0 0 0)}
+.bh__plane{position:absolute;inset:0;transform:scaleY(.22)}
+
+.bh__ring,.bh__core{
+  position:absolute;inset:0;width:100%;height:100%;display:block;
+  user-select:none;-webkit-user-drag:none;pointer-events:none;
+}
+.bh__ring{
+  animation:bhSpin var(--t) linear infinite, bhIn 1.2s var(--ease) var(--in) both;
+  will-change:transform;
+}
+.bh__ring--1{--t:68s;--in:1.00s}
+.bh__ring--2{--t:46s;--in:.80s}
+.bh__ring--3{--t:31s;--in:.60s}
+.bh__ring--4{--t:21s;--in:.40s}
+@keyframes bhSpin{to{transform:rotate(360deg)}}
+@keyframes bhIn{from{opacity:0}to{opacity:1}}
+
+/* Das Medaillon wird zuerst aufgelegt, dann atmet es kaum merklich */
+.bh__core{animation:bhCoreIn 1.3s var(--ease) both, bhBreathe 9s ease-in-out 1.3s infinite}
+@keyframes bhCoreIn{from{opacity:0;transform:scale(.9) rotate(-8deg)}to{opacity:1;transform:none}}
+@keyframes bhBreathe{50%{transform:scale(1.014)}}
+
+/* Papierschnipsel auf Spiralbahn: außen der Umlauf, innen der Sturz zur Mitte */
+.bh__scrap{
+  position:absolute;left:50%;top:50%;width:0;height:0;
+  animation:scrapOrbit calc(var(--d) * 1.7) linear var(--dl) infinite;
+}
+.bh__scrap b{
+  position:absolute;
+  width:calc(var(--bh) * .013 * var(--w));height:calc(var(--bh) * .009 * var(--w));
+  margin:calc(var(--bh) * -.0045 * var(--w)) 0 0 calc(var(--bh) * -.0065 * var(--w));
+  background:var(--c);
+  animation:scrapFall calc(var(--d) * 4.2) cubic-bezier(.45,0,.9,.55) var(--dl) infinite;
+}
+@keyframes scrapOrbit{
+  from{transform:rotate(var(--a))}
+  to  {transform:rotate(calc(var(--a) + 360deg))}
+}
+@keyframes scrapFall{
+  0%  {transform:translateX(calc(var(--bh) * .48)) rotate(0) scale(1);opacity:0}
+  7%  {opacity:1}
+  90% {opacity:1}
+  100%{transform:translateX(calc(var(--bh) * .15)) rotate(600deg) scale(.3);opacity:0}
+}
+
+/* ---------- Risskante zum Himmel ----------
+   Zwei dunkle Blätter enden hier ungleich; darunter kommt der Himmel hervor.
+   Der hellere Streifen an jeder Kante ist der freiliegende Faserkern. */
+.tear{
+  position:absolute;left:0;right:0;top:calc(100% - 2px);
+  height:clamp(58px,8vw,120px);
+  pointer-events:none;
+  filter:drop-shadow(0 7px 8px rgba(0,0,0,.38));
+}
+.tear svg{width:100%;height:100%;display:block}
+.tear__sheet--a{fill:var(--space)}
+.tear__core--a {fill:#535A86}
+.tear__sheet--b{fill:#1B1E3D}
+.tear__core--b {fill:#666DA4}
+
+.scrollhint--space{color:rgba(236,230,216,.72);z-index:3}
+
+/* Über dem dunklen Bogen muss das Zeichen oben links hell sein */
+.in-space .mark__link{color:var(--space-ink)}
+.in-space .mk-orbit{stroke:var(--space-ink)}
+.in-space .mk-orbit--b{stroke:#E8834F}
+.in-space .mk-core{stroke:var(--space-ink);fill:#E8834F}
+.mark__link{transition:color .4s var(--ease)}
+
+/* =========================================================
+   Himmel
+   ========================================================= */
+/* Der Himmel gehoert jetzt zum Hero-Abschnitt, nicht mehr zum Fenster. */
+.hero{position:relative;overflow:hidden}
+.sky{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.assets{position:absolute;width:0;height:0;overflow:hidden}
+
+/* Die Verabschiedung liegt auf den Schichten, nicht auf den Wolken selbst:
+   die tragen schon die endlose drift-Animation, und ein transform auf
+   demselben Element würde von ihr überschrieben. */
+.clouds{
+  position:absolute;inset:0;
+  transition:transform 1.9s cubic-bezier(.35,.02,.2,1), opacity 1.5s ease;
+  will-change:transform,opacity;
+}
+.sky.is-leaving .clouds--far {transform:translate(26vw,-26vh);opacity:0}
+.sky.is-leaving .clouds--near{transform:translate(44vw,-38vh);opacity:0}
+.cloud{
+  position:absolute;
+  filter:url(#paper);
+  will-change:transform;
+}
+.cloud use{fill:var(--cloud)}
+/* zweites Blatt unter der Wolke, leicht versetzt */
+.cloud__under{fill:var(--cloud-under)}
+.clouds--far .cloud use{fill:var(--cloud-far)}
+.clouds--far .cloud{opacity:.85}
+
+/* Größe, Höhe, Tempo — vordere Wolken ziehen schneller (Parallaxe) */
+.cloud--a{width:300px;top:12%;animation:drift 132s linear infinite}
+.cloud--b{width:210px;top:31%;animation:drift 168s linear -54s infinite}
+.cloud--c{width:250px;top:66%;animation:drift 150s linear -96s infinite}
+.cloud--d{width:400px;top:19%;animation:drift  92s linear -30s infinite}
+.cloud--e{width:330px;top:73%;animation:drift 108s linear -70s infinite}
+
+@keyframes drift{
+  from{transform:translateX(-46vw)}
+  to  {transform:translateX(118vw)}
+}
+
+/* ---------- Möwe ---------- */
+.gull{
+  position:absolute;top:26%;left:0;width:58px;
+  /* Negative Verzögerung: die Möwe steht beim Laden schon im Bild,
+     statt erst Sekunden später hereinzufliegen. */
+  animation:fly 46s linear -9s infinite;
+  will-change:transform;
+}
+.gull__bob{animation:bob 5.2s ease-in-out infinite}
+.gull__svg{
+  width:100%;height:auto;overflow:visible;
+  filter:drop-shadow(2px 3px 3px var(--shade-1));
+}
+.gull__wing,.gull__body{fill:var(--ink)}
+.gull__wing{transform-box:view-box;transform-origin:30px 15px}
+
+/* Flug: quer über die Seite, dabei sanft steigend und fallend */
+@keyframes fly{
+  from{transform:translate(-14vw, 0) scale(.9)}
+  50% {transform:translate( 52vw, -7vh) scale(1)}
+  to  {transform:translate(116vw, 3vh) scale(.86)}
+}
+@keyframes bob{50%{transform:translateY(-9px)}}
+
+/* Flügelschlag mit Gleitphase: schlagen, gleiten, schlagen */
+/* Positiver Winkel hebt den linken Flügel, negativer den rechten. */
+@keyframes flapL{
+  0%  {transform:rotate(-10deg)}
+  12% {transform:rotate( 19deg)}
+  24% {transform:rotate(-10deg)}
+  36% {transform:rotate( 19deg)}
+  48% {transform:rotate(  1deg)}
+  78% {transform:rotate( -1deg)}   /* Gleiten */
+  90% {transform:rotate( 18deg)}
+  100%{transform:rotate(-10deg)}
+}
+@keyframes flapR{
+  0%  {transform:rotate( 10deg)}
+  12% {transform:rotate(-19deg)}
+  24% {transform:rotate( 10deg)}
+  36% {transform:rotate(-19deg)}
+  48% {transform:rotate( -1deg)}
+  78% {transform:rotate(  1deg)}
+  90% {transform:rotate(-18deg)}
+  100%{transform:rotate( 10deg)}
+}
+.gull__wing--l{animation:flapL 3.1s ease-in-out infinite}
+.gull__wing--r{animation:flapR 3.1s ease-in-out infinite}
+
+/* =========================================================
+   Marke oben links
+   ========================================================= */
+.mark{position:fixed;top:0;left:0;z-index:55;padding:clamp(18px,3vw,34px)}
+.mark__link{
+  display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);
+  font-weight:700;letter-spacing:.06em;font-size:1rem;
+}
+.mark__glyph{width:30px;height:30px}
+.mark__glyph svg{width:100%;height:100%;overflow:visible}
+.mk-orbit{fill:none;stroke:var(--ink);stroke-width:2.4;transform-origin:20px 20px;animation:rot 9s linear infinite}
+.mk-orbit--b{animation-duration:6s;animation-direction:reverse;stroke:var(--accent)}
+.mk-core{fill:var(--accent);stroke:var(--ink);stroke-width:2.4}
+@keyframes rot{to{transform:rotate(360deg)}}
+
+/* =========================================================
+   Bühne
+   ========================================================= */
+.stage{
+  position:relative;z-index:4;
+  min-height:100svh;
+  display:flex;align-items:center;justify-content:center;
+  gap:clamp(22px,4.5vw,60px);
+  padding:clamp(20px,5vw,60px);
+}
+
+.hello{
+  margin:0;
+  font-size:clamp(2.3rem,6.8vw,5.4rem);
+  font-weight:700;letter-spacing:-.025em;line-height:1.05;
+  white-space:nowrap;
+  /* Buchstaben wie ausgeschnitten und aufgelegt */
+  filter:url(#cut);
+}
+.hello__row{display:inline-flex;align-items:baseline}
+
+/* --- Der rotierende Gruß --- */
+/* Das Wort läuft im normalen Fluss mit: nur so trifft seine Grundlinie
+   exakt die von ", I'm Tom.". Die Breite steuert JS, damit der Rest der
+   Zeile beim Sprachwechsel weich mitwandert. */
+.greet{
+  display:inline-block;vertical-align:baseline;
+  width:1.55em;                 /* Rückfallbreite, falls JS nicht läuft */
+  white-space:nowrap;
+  will-change:width;
+}
+/* Erst nach der ersten Messung animieren, sonst wandert die Zeile beim
+   Laden einmal sichtbar von der Rückfallbreite auf die echte Breite. */
+.greet.is-ready{transition:width .30s var(--ease)}
+.greet__word{
+  position:relative;display:inline-block;z-index:0;
+  font-family:var(--font-intl);
+  /* Feste Zeilenhöhe: sonst bestimmt die jeweilige Ersatzschrift die Höhe
+     der Wortbox — und der Textmarker säße bei jeder Sprache woanders. */
+  line-height:1;
+  unicode-bidi:isolate;
+  white-space:nowrap;
+}
+.greet__text{position:relative}
+
+/* Sprachwechsel: hinaus nach oben, herein von unten.
+   Die 300 ms müssen zur Konstante OUT in main.js passen. */
+.greet__word{transition:transform .3s var(--ease), opacity .3s var(--ease)}
+.greet__word.is-out{transform:translateY(-.42em) rotate(-2.5deg);opacity:0}
+.greet__word.is-in{transform:translateY(.5em) rotate(2.5deg);opacity:0;transition:none}
+
+/* Textmarker-Strich hinter dem Wort */
+.greet__mark{
+  position:absolute;z-index:-1;
+  left:-.10em;right:-.10em;bottom:.20em;height:.46em;
+  background:var(--marker);
+  opacity:.62;
+  border-radius:.24em .3em .2em .26em / .5em .4em .55em .45em;
+  transform:rotate(-1.1deg);
+  filter:url(#torn);
+  pointer-events:none;
+}
+
+/* Sitzt im Wort selbst und erbt dadurch Schriftart, -größe, -schnitt und
+   Laufweite exakt — Nachbauen der Stile wäre fehleranfällig. */
+.measure{
+  position:absolute;visibility:hidden;pointer-events:none;
+  top:0;left:0;white-space:nowrap;
+}
+
+/* =========================================================
+   Portrait mit Skizzen-Daumenkino
+   ========================================================= */
+.portrait{flex:none}
+.portrait__disc{
+  position:relative;
+  width:clamp(96px,15vw,150px);aspect-ratio:1;
+  border-radius:50%;
+  background:var(--cloud);
+  /* wie ein aufgeklebter Papierkreis: breiter heller Rand, feine Schnittkante,
+     Schatten — und von Hand leicht schief gesetzt */
+  box-shadow:
+    0 0 0 6px var(--cloud),
+    0 0 0 7.5px var(--btn-edge),
+    4px 10px 14px var(--shade-3);
+  overflow:hidden;
+  transform:rotate(-2.5deg);
+  transition:transform .45s var(--ease);
+}
+.portrait:hover .portrait__disc,
+.portrait:focus-within .portrait__disc{transform:translateY(-5px) rotate(1.5deg)}
+
+.portrait__disc img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+}
+.portrait__frame{opacity:0}
+/* Der aktive Skizzen-Frame wird per JS gesetzt */
+.portrait__frame.is-on{opacity:1}
+.portrait.is-sketching .portrait__base{opacity:0}
+
+/* =========================================================
+   Hinweis zum Weiterscrollen
+   ========================================================= */
+.scrollhint{
+  position:absolute;left:50%;bottom:clamp(16px,4vh,38px);z-index:9;
+  transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:9px;
+  text-decoration:none;color:var(--ink-soft);
+  font-size:.7rem;font-weight:500;letter-spacing:.26em;text-transform:uppercase;
+  transition:opacity .5s var(--ease), transform .5s var(--ease);
+}
+.scrollhint__arrow{width:19px;height:25px;animation:hintBob 2.2s ease-in-out infinite}
+.scrollhint__arrow svg{
+  width:100%;height:100%;fill:none;stroke:currentColor;
+  stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;
+}
+@keyframes hintBob{
+  0%,100%{transform:translateY(0);opacity:.5}
+  50%    {transform:translateY(7px);opacity:1}
+}
+/* Sobald gescrollt wird, hat der Hinweis seinen Zweck erfüllt */
+.scrollhint.is-gone{opacity:0;transform:translate(-50%,14px);pointer-events:none}
+
+/* =========================================================
+   Wiese
+   ========================================================= */
+.garden{
+  position:relative;
+  min-height:100svh;
+  overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  padding:20svh clamp(18px,5vw,60px) 34svh;
+  /* Kein eigener Hintergrund: der Bogen soll über beide Abschnitte
+     durchlaufen, sonst sieht man beim Scrollen eine Kante. */
+}
+
+/* ---------- Hügel im Hintergrund ---------- */
+.hills{position:absolute;left:0;right:0;bottom:20%;height:26%;z-index:1}
+/* Jedes Band ein eigenes Blatt, etwas über den Rand hinaus: so liegen die
+   verzogenen Seiten- und Unterkanten außerhalb des Sichtbaren. */
+.band{
+  position:absolute;left:-14px;top:0;
+  width:calc(100% + 28px);height:calc(100% + 14px);
+  display:block;filter:url(#paperUp);
+}
+.hill--back{fill:var(--hill-back)}
+.hill--front{fill:var(--hill-front)}
+
+/* ---------- Bäume ---------- */
+/* Kein eigener z-index: der wuerde einen Stapelkontext aufmachen und alle
+   Bäume auf dessen Ebene sperren — die vorderen kämen hinter die Wiese. */
+.grove{position:absolute;inset:0}
+.tree{position:absolute}
+.tree__svg{
+  width:100%;height:auto;display:block;
+  transform-origin:50% 100%;              /* Wiegen um den Stammfuß */
+}
+.tree__wood path{fill:none;stroke:var(--bark);stroke-linecap:round}
+/* Der Filter sitzt nur auf den ruhenden Blütengruppen. Läge er auf dem
+   bewegten Baum, müsste der Browser ihn in jedem Bild neu rastern. */
+.tree__bloom{filter:url(#paperSoft)}
+/* Holz ohne hellen Kern: die dünnen Zweige bestünden sonst nur noch aus Rand */
+.tree__wood{filter:url(#paperPlain)}
+.tree__bloom--back  ellipse{fill:var(--bloom-back)}
+.tree__bloom--mid   ellipse{fill:var(--bloom-mid)}
+.tree__bloom--front ellipse{fill:var(--bloom-front)}
+
+.tree--near{z-index:4;width:clamp(240px,36vw,540px);bottom:13%}
+.tree--far {z-index:2;width:clamp(120px,18vw,270px);bottom:25%;opacity:.85}
+/* Auflagerschatten: ohne ihn schwebt der Stamm über dem Gras. */
+.tree::after{
+  content:"";position:absolute;left:50%;bottom:0;transform:translateX(-50%);
+  width:44%;height:26px;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 50%, var(--ground-shade), transparent 70%);
+}
+.tree--far::after{width:36%;height:16px;opacity:.6}
+/* Ferne Bäume blasser — die Farben erben in die <use>-Kopien hinein.
+   Nachts brauchen sie eigene Werte, sonst leuchten sie im Dunkeln weiter. */
+.tree--far{
+  --bark:        #6B584A;
+  --bloom-back:  #EFC4CE;
+  --bloom-mid:   #F6D7DF;
+  --bloom-front: #FCEAEF;
+}
+[data-theme="dark"] .tree--far{
+  --bark:        #2A2434;
+  --bloom-back:  #4C3644;
+  --bloom-mid:   #5E4455;
+  --bloom-front: #745566;
+}
+.tree--n1{left:-5%}
+.tree--n2{right:-5%}
+.tree--f1{left:19%}
+.tree--f2{right:21%}
+
+/* Jeder Baum wiegt sich in eigenem Takt; gespiegelte mit eigenem Keyframe,
+   weil die Spiegelung sonst von der Drehung überschrieben würde. */
+@keyframes sway     {0%,100%{transform:rotate(-1.1deg)}50%{transform:rotate(1.4deg)}}
+@keyframes swayFlip {0%,100%{transform:scaleX(-1) rotate(-1.1deg)}50%{transform:scaleX(-1) rotate(1.4deg)}}
+.tree__svg{animation:sway 7.5s ease-in-out infinite}
+.tree--flip .tree__svg{animation-name:swayFlip}
+.tree--n1 .tree__svg{animation-duration:7.5s;animation-delay:-1.2s}
+.tree--n2 .tree__svg{animation-duration:8.9s;animation-delay:-3.6s}
+.tree--f1 .tree__svg{animation-duration:6.4s;animation-delay:-2.1s}
+.tree--f2 .tree__svg{animation-duration:9.7s;animation-delay:-5.0s}
+
+/* ---------- Grasbänder ---------- */
+.meadow{position:absolute;left:0;right:0;bottom:0;height:32%;z-index:3}
+.grass--far {fill:var(--grass-far)}
+.grass--mid {fill:var(--grass-mid)}
+.grass--near{fill:var(--grass-near)}
+
+/* ---------- Blütenblätter ---------- */
+.petals{position:absolute;inset:0;z-index:7;pointer-events:none;overflow:hidden}
+.petal{position:absolute;left:var(--x);top:0;animation:petalFall var(--d) linear var(--delay) infinite}
+.petal i{
+  display:block;
+  box-shadow:1px 2px 2px var(--shade-2);
+  width:calc(9px * var(--s));height:calc(12px * var(--s));
+  background:var(--bloom-mid);
+  border-radius:100% 0 100% 0;
+  animation:petalSway calc(var(--d) / 4) ease-in-out var(--delay) infinite;
+}
+/* Fallen und Taumeln getrennt: sonst dreht sich die Seitwärtsbewegung mit */
+@keyframes petalFall{from{transform:translateY(-10vh)} to{transform:translateY(106svh)}}
+@keyframes petalSway{
+  0%,100%{transform:translateX(-15px) rotate(-25deg)}
+  50%    {transform:translateX(17px)  rotate(215deg)}
+}
+
+/* =========================================================
+   Tiere
+   ========================================================= */
+.fauna{position:absolute;inset:0;z-index:6}
+.critter{
+  position:absolute;padding:0;border:0;background:none;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  line-height:0;
+}
+.critter__body{display:block;transform-origin:50% 92%}
+.critter svg{width:100%;height:auto;display:block;filter:url(#paperPlain)}
+.critter .ink{fill:var(--fur)}
+.critter .warm{fill:var(--fur-warm)}
+.critter .pale{fill:var(--fur-pale)}
+.critter .eye{fill:var(--eye)}
+.critter .stroke{fill:none;stroke:var(--fur);stroke-linecap:round;stroke-linejoin:round}
+.critter:focus-visible{outline:3px solid var(--accent);outline-offset:6px;border-radius:8px}
+
+.critter--deer     {left:11%; bottom:14%; width:clamp(76px,8.6vw,128px)}
+.critter--rabbit   {right:16%;bottom:7%;  width:clamp(50px,5.4vw,82px)}
+.critter--bird     {left:34%; bottom:5%;  width:clamp(42px,4.6vw,66px)}
+.critter--butterfly{left:17%; bottom:52%; width:clamp(36px,3.8vw,54px)}
+
+/* --- Ruhezustand: kleine Lebenszeichen --- */
+.critter__head,.critter__ears,.critter__wing,.critter--butterfly .wing{
+  transform-box:view-box;
+}
+.critter--deer .critter__head{transform-origin:78px 50px;animation:headBob 6.5s ease-in-out infinite}
+@keyframes headBob{0%,58%,100%{transform:rotate(0)}68%{transform:rotate(7deg)}78%{transform:rotate(1deg)}}
+
+.critter--rabbit .critter__ears{transform-origin:78px 48px;animation:earTwitch 5.2s ease-in-out infinite}
+@keyframes earTwitch{0%,72%,100%{transform:rotate(0)}80%{transform:rotate(-9deg)}88%{transform:rotate(3deg)}}
+
+.critter--bird .critter__body{animation:birdBob 3.4s ease-in-out infinite}
+@keyframes birdBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+
+.critter--butterfly .critter__body{animation:flutterDrift 9s ease-in-out infinite}
+@keyframes flutterDrift{
+  0%,100%{transform:translate(0,0)}
+  33%    {transform:translate(-10px,-14px)}
+  66%    {transform:translate(8px,-6px)}
+}
+.critter--butterfly .wing{transform-origin:60px 56px;animation:wingBeat .42s ease-in-out infinite}
+@keyframes wingBeat{50%{transform:scaleX(.5)}}
+
+/* --- Beim Anklicken --- */
+.critter.is-playing .critter__body{animation:none}
+
+/* Reh: ducken, weiter Satz nach rechts, zurückspringen */
+.critter--deer.is-playing .critter__body{animation:leap 1.7s cubic-bezier(.4,0,.5,1)}
+@keyframes leap{
+  0%  {transform:translate(0,0) rotate(0) scale(1,1)}
+  12% {transform:translate(2%,4%) scale(1.07,.9)}
+  30% {transform:translate(34%,-46%) rotate(-9deg) scale(.96,1.08)}
+  48% {transform:translate(72%,0) rotate(2deg) scale(1.06,.92)}
+  56% {transform:translate(72%,0) rotate(0) scale(1,1)}
+  74% {transform:translate(36%,-38%) rotate(8deg) scale(.97,1.06)}
+  92% {transform:translate(0,2%) scale(1.06,.92)}
+  100%{transform:translate(0,0) scale(1,1)}
+}
+
+/* Hase: zwei kurze Hopser hin und zurück */
+.critter--rabbit.is-playing .critter__body{animation:hop 1.3s cubic-bezier(.35,0,.5,1)}
+@keyframes hop{
+  0%  {transform:translate(0,0) scale(1,1)}
+  10% {transform:translate(0,3%) scale(1.08,.88)}
+  30% {transform:translate(-34%,-34%) scale(.95,1.09)}
+  46% {transform:translate(-62%,0) scale(1.07,.9)}
+  54% {transform:translate(-62%,0) scale(1,1)}
+  74% {transform:translate(-30%,-30%) scale(.96,1.08)}
+  92% {transform:translate(0,3%) scale(1.07,.9)}
+  100%{transform:translate(0,0) scale(1,1)}
+}
+
+/* Vogel: Schleife nach oben und zurück auf den Platz */
+.critter--bird.is-playing .critter__body{animation:flit 1.6s ease-in-out}
+@keyframes flit{
+  0%  {transform:translate(0,0) rotate(0)}
+  18% {transform:translate(34%,-130%) rotate(-16deg)}
+  38% {transform:translate(130%,-205%) rotate(-4deg)}
+  58% {transform:translate(210%,-135%) rotate(14deg)}
+  78% {transform:translate(135%,-34%) rotate(8deg)}
+  100%{transform:translate(0,0) rotate(0)}
+}
+.critter--bird.is-playing .critter__wing{
+  transform-origin:62px 52px;animation:birdFlap .17s ease-in-out infinite;
+}
+@keyframes birdFlap{50%{transform:rotate(-34deg) scaleY(.6)}}
+
+/* Falter: eine Acht um den Ausgangspunkt */
+.critter--butterfly.is-playing .critter__body{animation:aboutEight 2.4s ease-in-out}
+@keyframes aboutEight{
+  0%  {transform:translate(0,0) rotate(0)}
+  20% {transform:translate(-74%,-56%) rotate(-12deg)}
+  40% {transform:translate(-136%,16%) rotate(8deg)}
+  60% {transform:translate(-70%,74%) rotate(14deg)}
+  80% {transform:translate(24%,26%) rotate(-6deg)}
+  100%{transform:translate(0,0) rotate(0)}
+}
+.critter--butterfly.is-playing .wing{animation-duration:.22s}
+
+/* =========================================================
+   Kontakt in der Mitte
+   ========================================================= */
+.garden__center{position:relative;z-index:8;text-align:center}
+.garden__kicker{
+  margin:0 0 clamp(16px,2.6vw,28px);
+  font-weight:700;letter-spacing:-.02em;
+  font-size:clamp(1.35rem,3.6vw,2.5rem);
+  filter:url(#cut);
+}
+.links{display:flex;flex-wrap:wrap;gap:clamp(10px,1.6vw,18px);justify-content:center}
+
+.paperbtn{
+  position:relative;
+  display:inline-flex;align-items:center;gap:11px;
+  padding:13px clamp(18px,2vw,24px);
+  text-decoration:none;color:var(--btn-text);
+  font-weight:500;font-size:clamp(.88rem,1.05vw,1rem);letter-spacing:.005em;
+  background:var(--btn-bg);
+  border:1.5px solid var(--btn-edge);
+  border-radius:8px;
+  /* darunter schaut ein zweites Blatt hervor */
+  box-shadow:0 3px 0 -.5px var(--btn-under), 0 4px 0 -.5px var(--btn-edge),
+             0 12px 18px -10px var(--shade-3);
+  transition:transform .22s var(--ease), box-shadow .22s var(--ease),
+             border-color .22s var(--ease), background .22s var(--ease);
+}
+/* Ein feiner heller Grat oben: lässt die Karte auf dem Papier aufliegen. */
+.paperbtn::before{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  box-shadow:inset 0 1px 0 var(--btn-sheen);
+}
+.paperbtn:hover{
+  transform:translateY(-2px);
+  border-color:var(--btn-edge-strong);
+  box-shadow:0 4px 0 -.5px var(--btn-under), 0 5px 0 -.5px var(--btn-edge),
+             0 18px 24px -12px var(--shade-3);
+}
+.paperbtn:active{
+  transform:translateY(2px);
+  box-shadow:0 1px 0 -.5px var(--btn-under), 0 2px 0 -.5px var(--btn-edge),
+             0 4px 8px -6px var(--shade-3);
+}
+.paperbtn:focus-visible{outline:2.5px solid var(--accent);outline-offset:3px}
+
+.paperbtn__icon{width:20px;height:20px;flex:none}
+.paperbtn__icon svg{
+  width:100%;height:100%;fill:none;stroke:var(--btn-text);
+  stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;
+}
+
+/* =========================================================
+   Tag / Nacht — Umschalter oben rechts
+   ========================================================= */
+.daynight{
+  position:fixed;top:0;right:0;z-index:56;
+  margin:clamp(18px,3vw,34px);
+  width:46px;height:46px;padding:0;
+  display:grid;place-items:center;cursor:pointer;
+  background:var(--btn-bg);
+  border:1.5px solid var(--btn-edge);
+  border-radius:12px;
+  box-shadow:0 3px 0 -.5px var(--btn-under), 0 4px 0 -.5px var(--btn-edge),
+             0 12px 18px -10px var(--shade-3);
+  -webkit-tap-highlight-color:transparent;
+  transition:transform .22s var(--ease), box-shadow .22s var(--ease),
+             border-color .22s var(--ease), background .5s var(--ease);
+}
+.daynight:hover{transform:translateY(-2px);border-color:var(--btn-edge-strong)}
+.daynight:active{transform:translateY(0)}
+.daynight:focus-visible{outline:2.5px solid var(--accent);outline-offset:3px}
+.daynight__face{display:block;width:26px;height:26px}
+.daynight__face svg{width:100%;height:100%;display:block;overflow:visible}
+
+.dn-disc{fill:var(--sun);transition:fill .5s var(--ease)}
+.dn-rays path{fill:none;stroke:var(--sun);stroke-width:2.4;stroke-linecap:round}
+.dn-rays,.dn-bite,.dn-sparks circle{transform-box:view-box;transform-origin:22px 22px}
+.dn-rays{transition:transform .55s cubic-bezier(.34,1.45,.5,1), opacity .3s ease}
+/* Der Biss ist ein Loch in der Maske. Im Hellen liegt er außerhalb der
+   Scheibe (volle Sonne), im Dunkeln schiebt er sich darüber und schneidet
+   die Sichel heraus. */
+.dn-bite{transform:translate(15px,-15px);transition:transform .55s cubic-bezier(.34,1.3,.5,1)}
+.dn-sparks circle{
+  fill:var(--moon-spark);opacity:0;transform:scale(0);
+  transition:opacity .35s ease, transform .5s cubic-bezier(.34,1.5,.5,1);
+}
+
+[data-theme="dark"] .dn-rays{transform:scale(.3) rotate(55deg);opacity:0}
+[data-theme="dark"] .dn-bite{transform:translate(6.5px,-5.5px)}
+[data-theme="dark"] .dn-disc{fill:var(--moon-face)}
+[data-theme="dark"] .dn-sparks circle{opacity:1;transform:scale(1)}
+[data-theme="dark"] .dn-sparks circle:nth-child(1){transition-delay:.16s}
+[data-theme="dark"] .dn-sparks circle:nth-child(2){transition-delay:.26s}
+[data-theme="dark"] .dn-sparks circle:nth-child(3){transition-delay:.36s}
+
+/* =========================================================
+   Gestirne — liegen fest hinter Himmel und Wiese
+   Tags die Papiersonne, nachts Mond und Sterne.
+   ========================================================= */
+.stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+.stars__field{opacity:0;transition:opacity .8s var(--ease)}
+[data-theme="dark"] .stars__field{opacity:1}
+
+.sun{
+  position:absolute;top:9%;right:14%;
+  width:clamp(76px,9vw,132px);aspect-ratio:1;
+  transition:opacity .9s var(--ease), transform .9s var(--ease);
+}
+.sun__rays,.sun__disc{position:absolute;inset:0}
+.sun svg{width:100%;height:100%;display:block;overflow:visible}
+.sun__rays{animation:rot 80s linear infinite;will-change:transform}
+.sun__rays path{fill:var(--sun-ray)}
+.sun__disc circle{fill:var(--sun)}
+.sun__disc .sun__inner{fill:var(--sun-inner)}
+[data-theme="dark"] .sun{opacity:0;transform:translateY(34px) scale(.85)}
+
+.stars__field i{
+  position:absolute;left:var(--x);top:var(--y);
+  width:calc(2.2px * var(--s));height:calc(2.2px * var(--s));
+  border-radius:50%;background:var(--star);
+  animation:twinkle var(--d) ease-in-out var(--dl) infinite;
+}
+@keyframes twinkle{
+  0%,100%{opacity:.28;transform:scale(.8)}
+  50%    {opacity:1;  transform:scale(1.2)}
+}
+
+.moon{
+  position:absolute;top:11%;right:15%;
+  width:clamp(56px,7vw,96px);
+  opacity:0;transform:translateY(-14px) scale(.92);
+  transition:opacity .9s var(--ease), transform .9s var(--ease);
+}
+[data-theme="dark"] .moon{opacity:1;transform:none}
+.moon svg{width:100%;height:auto;display:block;overflow:visible}
+.moon__disc{fill:var(--moon-face)}
+
+/* =========================================================
+   Nachtfassung der Szene
+   ========================================================= */
+[data-theme="dark"]{
+  --paper:      #171B26;
+  --paper-deep: #10131C;
+  --cloud:      #2C3446;
+  --cloud-far:  #232A39;
+  --ink:        #E9E3D5;
+  --ink-soft:   #9C9585;
+  --accent:     #E8834F;
+  --marker:     #A87A24;
+
+  --bark:        #14111A;
+  --bloom-back:  #6A4657;
+  --bloom-mid:   #8A5D6F;
+  --bloom-front: #AE7B8C;
+  --hill-back:   #232B33;
+  --hill-front:  #1D242C;
+  --grass-far:   #2C3730;
+  --grass-mid:   #242E28;
+  --grass-near:  #1C2520;
+  --fur:         #0D0F14;
+  --fur-warm:    #2E2A36;
+  --fur-pale:    #4A4553;
+  --eye:         #CFC8B6;
+
+  --shade-1:     rgba(0,0,0,.42);
+  --shade-2:     rgba(0,0,0,.50);
+  --shade-3:     rgba(0,0,0,.60);
+  --ground-shade:rgba(0,0,0,.48);
+  --wash-top:    rgba(96,120,190,.13);
+  --wash-bottom: rgba(0,0,0,.42);
+
+  --btn-bg:          #232A38;
+  --btn-text:        #EDE7DA;
+  --btn-edge:        rgba(237,231,218,.24);
+  --btn-edge-strong: rgba(237,231,218,.58);
+  --btn-sheen:       rgba(255,255,255,.10);
+  --btn-under:       #141925;
+
+  --cloud-under:  #1F2534;
+  --tex-veil:     rgba(23,27,38,.62);
+  --rim:          #C9CEEC;
+  --rim-a:        .20;
+  --cut-shadow:   #000000;
+  --cut-shadow-a: .52;
+}
+
+[data-theme="dark"] .portrait__base{filter:brightness(.82) saturate(.86)}
+/* Die Skizzen sind dunkle Tinte auf Transparenz und wären nachts
+   unsichtbar. invert dreht die Tinte ins Helle, die Deckung bleibt. */
+[data-theme="dark"] .portrait__frame{filter:invert(1) brightness(1.06)}
+
+/* =========================================================
+   Weicher Übergang beim Umschalten
+   ========================================================= */
+body{transition:background-color .55s var(--ease), color .55s var(--ease)}
+.hill,.grass,.cloud use,.tree__wood path,.tree__bloom ellipse,
+.critter .ink,.critter .warm,.critter .pale,.critter .eye,.critter .stroke,
+.gull__wing,.gull__body,.mk-core,.mk-orbit,.petal i,
+.sun__rays path,.sun__disc circle,.moon__disc{
+  transition:fill .55s var(--ease), stroke .55s var(--ease),
+             background-color .55s var(--ease);
+}
+
+/* =========================================================
+   Kleinere Bildschirme
+   ========================================================= */
+@media (max-width:680px){
+  .stage{flex-direction:column-reverse;gap:26px;justify-content:center}
+  .hello{font-size:clamp(1.6rem,8.2vw,2.6rem)}
+  .gull{top:18%}
+  .cloud--d{width:290px}
+  .cloud--a{width:220px}
+
+  .garden{padding:10svh 20px 34svh}
+  .sun{top:11%;right:10%}
+
+  /* Auf dem Handy rücken die vorderen Bäume nach außen, bis nur noch ihr
+     Stamm am Rand hereinragt. Erst dadurch bleibt die Mitte für die zweite
+     Reihe frei — sonst verdeckten sie sie fast vollständig. */
+  .tree--near{width:clamp(175px,48vw,250px);bottom:13%}
+  .tree--n1{left:-20%}
+  .tree--n2{right:-20%}
+  .tree--far{width:clamp(115px,33vw,180px);bottom:25%}
+  .tree--f1{left:16%}
+  .tree--f2{right:18%}
+
+  .links{flex-direction:column;align-items:stretch}
+  .paperbtn{justify-content:center}
+
+  /* Tiere neben die Stämme, nicht davor */
+  .critter--deer{left:9%;bottom:14%}
+  .critter--bird{left:36%;bottom:5%}
+  .critter--rabbit{right:11%}
+  /* left, nicht right: die Grundregel setzt left — bei gesetzter Breite
+     gewinnt left, die Regel bliebe sonst wirkungslos. */
+  .critter--butterfly{left:7%;bottom:56%}
+}
+
+/* =========================================================
+   Bewegung reduzieren
+   ========================================================= */
+@media (prefers-reduced-motion:reduce){
+  .cloud,.gull,.gull__bob,.gull__wing,.mk-orbit{animation:none}
+  /* Alles, was von selbst läuft, steht still. Die Tier-Animationen beim
+     Anklicken bleiben — die löst die Besucherin ja selbst aus. */
+  .tree__svg,.petal,.petal i,.scrollhint__arrow,
+  .critter--deer .critter__head,.critter--rabbit .critter__ears,
+  .critter--bird .critter__body,.critter--butterfly .critter__body,
+  .critter--butterfly .wing,.stars__field i,
+  .st,.bh__ring,.bh__core,.sun__rays{animation:none}
+  /* ohne Bahn lägen die Schnipsel als Haufen in der Mitte */
+  .bh__scrap{display:none}
+  .bh,.cosmos{transform:none}
+  .paperbtn{transition:none}
+  /* Wolken verabschieden sich dann nur durch Ausblenden, ohne den weiten Weg */
+  .sky.is-leaving .clouds--far,
+  .sky.is-leaving .clouds--near{transform:none}
+  .gull{transform:translate(52vw,-4vh)}
+  .cloud--a{transform:translateX(6vw)}
+  .cloud--b{transform:translateX(58vw)}
+  .cloud--c{transform:translateX(30vw)}
+  .cloud--d{transform:translateX(72vw)}
+  .cloud--e{transform:translateX(14vw)}
+  .greet,.greet__word,.portrait__disc{transition:none}
+}
